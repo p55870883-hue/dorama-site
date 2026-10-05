@@ -169,7 +169,7 @@
         .layout {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 420px;
+            grid-template-columns: 1fr 460px;
             gap: 24px;
             width: 100%;
             padding: 24px;
@@ -182,16 +182,14 @@
             flex-direction: column;
         }
 
-        /* ===== ПОИСК — КОРОЧЕ ===== */
+        /* ===== ПОИСК — НА ВСЮ ШИРИНУ ===== */
         .search-section {
             margin-bottom: 24px;
             flex-shrink: 0;
-            display: flex;
-            justify-content: flex-start;
         }
 
         .search-wrapper {
-            width: 85%;
+            width: 100%;
             position: relative;
             overflow: hidden;
             border-radius: 50px;
@@ -199,22 +197,22 @@
 
         .search-wrapper input {
             width: 100%;
-            padding: 14px 140px 14px 24px;
+            padding: 14px 140px 14px 28px;
             background: var(--bg-card);
             border: 3px solid #ff0000;
             border-radius: 50px;
             color: var(--text);
-            font-size: 18px;
+            font-size: 19px;
             font-family: system-ui, -apple-system, sans-serif;
             outline: none;
             transition: 0.3s ease;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
-            height: 56px;
+            height: 60px;
         }
 
         .search-wrapper input::placeholder {
             color: var(--text-muted);
-            font-size: 16px;
+            font-size: 17px;
         }
 
         .search-wrapper input:focus {
@@ -237,7 +235,7 @@
             cursor: pointer;
             font-family: system-ui, -apple-system, sans-serif;
             letter-spacing: 0.5px;
-            height: 42px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -307,19 +305,19 @@
             background: var(--bg-sidebar);
             border: 2px solid var(--cat-border);
             border-radius: 16px;
-            padding: 24px 20px;
+            padding: 26px 22px;
             height: fit-content;
             box-shadow: 0 0 30px rgba(255, 42, 42, 0.15);
         }
 
         .sidebar-title {
-            font-size: 30px;
+            font-size: 34px;
             font-weight: 800;
             color: var(--cat-color);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
+            margin-bottom: 22px;
+            padding-bottom: 18px;
             border-bottom: 2px solid var(--cat-border);
             text-align: center;
             text-shadow:
@@ -331,15 +329,15 @@
         .sidebar-nav {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 9px;
         }
 
         .sidebar-item {
             display: block;
-            padding: 18px 24px;
+            padding: 20px 26px;
             border-radius: 12px;
             text-decoration: none;
-            font-size: 25px;
+            font-size: 28px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s ease;
@@ -378,7 +376,7 @@
             height: 2px;
             background: var(--cat-border);
             opacity: 0.5;
-            margin: 12px 4px;
+            margin: 14px 4px;
             border-radius: 2px;
         }
 
