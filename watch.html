@@ -16,7 +16,6 @@
             --text-muted: #8892a8;
             --border: #2a313f;
 
-            /* Жёлто-зелёная палитра */
             --yellow: #f1c40f;
             --yellow-hover: #f9d849;
             --green: #2ecc71;
@@ -169,7 +168,34 @@
             cursor: pointer;
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ПЛЕЕРА ===== */
+        /* ===== ПОЛНОЭКРАННЫЙ РЕЖИМ ===== */
+        /* Растягиваем контейнер на весь экран */
+        .player-container:fullscreen,
+        .player-container:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            aspect-ratio: auto;
+            border-radius: 0;
+            border: none;
+            background: #000;
+        }
+
+        .player-container:fullscreen video,
+        .player-container:-webkit-full-screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        /* На Android — прячем всё, кроме видео */
+        .player-container:fullscreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
         .player-top-bar {
             position: absolute;
             top: 0;
@@ -192,7 +218,6 @@
             visibility: visible;
         }
 
-        /* В полном экране — только при паузе */
         .player-container:fullscreen .player-top-bar,
         .player-container:-webkit-full-screen .player-top-bar {
             opacity: 0;
@@ -205,7 +230,6 @@
             visibility: visible;
         }
 
-        /* Селекты */
         .top-select {
             background: #000;
             color: var(--green);
@@ -224,11 +248,6 @@
             background-position: right 10px center;
             min-width: 120px;
             transition: 0.2s;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000;
         }
 
         .top-select:hover,
@@ -279,7 +298,6 @@
             pointer-events: auto;
         }
 
-        /* Прогресс-бар */
         .progress-row {
             display: flex;
             align-items: center;
@@ -308,7 +326,6 @@
             background: var(--green-hover);
         }
 
-        /* Кнопки управления */
         .buttons-row {
             display: flex;
             align-items: center;
@@ -352,7 +369,6 @@
             fill: var(--green);
         }
 
-        /* Время */
         .sbx-time {
             color: var(--green);
             font-size: 15px;
@@ -361,15 +377,8 @@
             padding: 0 10px;
             flex-shrink: 0;
             letter-spacing: 0.5px;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000,
-                0 0 8px var(--glow-green);
         }
 
-        /* Кнопка качества */
         .sbx-quality {
             color: var(--green);
             font-size: 14px;
@@ -382,11 +391,6 @@
             transition: 0.2s;
             font-family: inherit;
             height: 40px;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000;
         }
 
         .sbx-quality:hover {
@@ -395,7 +399,6 @@
             box-shadow: 0 0 18px var(--glow-green);
         }
 
-        /* Громкость */
         .volume-wrap {
             display: flex;
             align-items: center;
@@ -424,7 +427,6 @@
             box-shadow: 0 0 8px var(--glow-green);
         }
 
-        /* Центральная кнопка Play */
         .center-play {
             position: absolute;
             top: 50%;
@@ -465,7 +467,6 @@
             margin-left: 4px;
         }
 
-        /* Меню настроек */
         .settings-menu {
             position: absolute;
             bottom: 70px;
@@ -497,11 +498,6 @@
             justify-content: space-between;
             align-items: center;
             transition: 0.15s;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000;
         }
 
         .settings-item:hover {
@@ -564,11 +560,6 @@
         .info-detail strong {
             color: var(--yellow);
             margin-right: 8px;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000;
         }
 
         .info-plot {
@@ -594,11 +585,6 @@
             color: var(--green);
             text-decoration: none;
             font-weight: 700;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000;
         }
     </style>
 </head>
@@ -615,14 +601,12 @@
 
             <div class="watch-main">
 
-                <!-- ПЛЕЕР -->
                 <div class="player-container" id="playerContainer">
-                    <video id="videoPlayer" preload="metadata" playsinline>
+                    <video id="videoPlayer" preload="metadata" playsinline webkit-playsinline>
                         <source id="videoSource" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
                         Ваш браузер не поддерживает видео.
                     </video>
 
-                    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
                     <div class="player-top-bar">
                         <select class="top-select" id="episodeSelect"></select>
                         <select class="top-select" id="translationSelect">
@@ -633,12 +617,10 @@
                         </select>
                     </div>
 
-                    <!-- ЦЕНТРАЛЬНАЯ КНОПКА PLAY -->
                     <button class="center-play" id="centerPlay">
                         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </button>
 
-                    <!-- НИЖНЯЯ ПАНЕЛЬ -->
                     <div class="player-bottom-bar" id="bottomBar">
 
                         <div class="progress-row">
@@ -682,7 +664,6 @@
                             </div>
                         </div>
 
-                        <!-- Меню настроек -->
                         <div class="settings-menu" id="settingsMenu">
                             <div class="settings-item" data-speed="0.5">Скорость <span>0.5x</span></div>
                             <div class="settings-item" data-speed="0.75">Скорость <span>0.75x</span></div>
@@ -694,7 +675,6 @@
                     </div>
                 </div>
 
-                <!-- ТОЛЬКО ИНФО С ОПИСАНИЕМ (без списка серий) -->
                 <div class="info-block">
                     <img class="info-poster" id="infoPoster" src="images/DR.jpg" alt="Постер" onerror="this.src='images/Log.png'">
                     <div class="info-text">
@@ -729,7 +709,7 @@
                 country: 'Республика Корея',
                 director: 'Чо Ын-соль',
                 translation: 'Профессиональный многоголосый',
-                plot: 'Увлекательная история о жизни и любви. Кан Си У и Ча Джи Юн — двое совершенно разных людей, чьи судьбы переплетаются в вихре событий. Он — известный архитектор, она — талантливый дизайнер. Смогут ли они преодолеть все преграды на пути к счастью?',
+                plot: 'Увлекательная история о жизни и любви. Кан Си У и Ча Джи Юн — двое совершенно разных людей, чьи судьбы переплетаются в вихре событий.',
                 video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
             }
         };
@@ -738,7 +718,6 @@
         const dramaId = urlParams.get('drama') || 'drama1';
         const drama = DRAMAS[dramaId] || DRAMAS.drama1;
 
-        // ===== ЗАПОЛНЕНИЕ =====
         document.getElementById('watchTitle').textContent = drama.name;
         document.getElementById('watchEpisodesCount').textContent = drama.episodes + ' серий';
         document.getElementById('infoName').textContent = drama.name;
@@ -752,7 +731,6 @@
         document.getElementById('videoSource').src = drama.video;
         document.getElementById('videoPlayer').load();
 
-        // ===== СЕЛЕКТ СЕРИЙ В ПЛЕЕРЕ =====
         const episodeSelect = document.getElementById('episodeSelect');
         episodeSelect.innerHTML = '';
         for (let e = 1; e <= drama.episodes; e++) {
@@ -761,12 +739,6 @@
             opt.textContent = e + ' серия';
             episodeSelect.appendChild(opt);
         }
-        episodeSelect.value = 1;
-
-        episodeSelect.addEventListener('change', () => {
-            console.log('Выбрана серия:', episodeSelect.value);
-            video.currentTime = 0;
-        });
 
         // ===== МАСШТАБИРОВАНИЕ =====
         function fitToScreen() {
@@ -867,7 +839,6 @@
             video.currentTime = Math.min(video.duration, video.currentTime + 10);
         });
 
-        // Звук
         const iconVolume = '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
         const iconMute = '<svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
 
@@ -885,26 +856,85 @@
             muteBtn.innerHTML = video.muted ? iconMute : iconVolume;
         });
 
-        // Полный экран
-        function enterFullscreen() {
-            if (playerContainer.requestFullscreen) playerContainer.requestFullscreen();
-            else if (playerContainer.webkitRequestFullscreen) playerContainer.webkitRequestFullscreen();
-            else if (playerContainer.msRequestFullscreen) playerContainer.msRequestFullscreen();
+        // ===== ПОЛНЫЙ ЭКРАН + ПОВОРОТ В ГОРИЗОНТАЛЬНУЮ ОРИЕНТАЦИЮ =====
+        async function enterFullscreen() {
+            try {
+                // 1. Запрашиваем полный экран
+                if (playerContainer.requestFullscreen) {
+                    await playerContainer.requestFullscreen();
+                } else if (playerContainer.webkitRequestFullscreen) {
+                    await playerContainer.webkitRequestFullscreen();
+                } else if (playerContainer.msRequestFullscreen) {
+                    await playerContainer.msRequestFullscreen();
+                }
+
+                // 2. Пытаемся заблокировать ориентацию в landscape
+                // Работает на Android в Chrome, в Safari — может не работать
+                if (screen.orientation && screen.orientation.lock) {
+                    try {
+                        await screen.orientation.lock('landscape');
+                        console.log('✅ Ориентация заблокирована в landscape');
+                    } catch (err) {
+                        console.log('⚠️ Не удалось заблокировать landscape:', err.message);
+                        // Fallback — пытаемся заблокировать через любой доступный способ
+                        try {
+                            await screen.orientation.lock('landscape-primary');
+                        } catch (e) {
+                            console.log('⚠️ Fallback тоже не сработал');
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Ошибка входа в полный экран:', err);
+            }
         }
 
-        function exitFullscreen() {
-            if (document.exitFullscreen) document.exitFullscreen();
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
+        async function exitFullscreen() {
+            try {
+                // 1. Разблокируем ориентацию
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+
+                // 2. Выходим из полного экрана
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    await document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.error('Ошибка выхода из полного экрана:', err);
+            }
         }
 
         fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
                 enterFullscreen();
             } else {
                 exitFullscreen();
             }
         });
+
+        // Следим за изменением состояния полного экрана
+        // (если пользователь вышел кнопкой "назад" на Android)
+        function onFullscreenChange() {
+            const isFullscreen = document.fullscreenElement ||
+                                 document.webkitFullscreenElement ||
+                                 document.msFullscreenElement;
+
+            if (!isFullscreen) {
+                // Разблокируем ориентацию, если вышли не через кнопку
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+        document.addEventListener('msfullscreenchange', onFullscreenChange);
 
         // Настройки
         settingsBtn.addEventListener('click', (e) => {
@@ -927,7 +957,6 @@
             });
         });
 
-        // Качество
         qualityBtn.addEventListener('click', () => {
             const qualities = ['360p', '480p', '720p', '1080p'];
             const current = qualityBtn.textContent;
@@ -936,7 +965,6 @@
             qualityBtn.textContent = next;
         });
 
-        // Скачать
         downloadBtn.addEventListener('click', () => {
             const a = document.createElement('a');
             a.href = video.currentSrc || video.src;
@@ -944,7 +972,10 @@
             a.click();
         });
 
-        // Изначально на паузе — панели видны
+        episodeSelect.addEventListener('change', () => {
+            video.currentTime = 0;
+        });
+
         playerContainer.classList.add('paused');
     </script>
 </body>
