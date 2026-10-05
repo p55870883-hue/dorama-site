@@ -11,19 +11,50 @@
         :root {
             --bg: #0b0e14;
             --bg-card: #151b24;
+            --bg-sidebar: #0f141c;
             --text: #f0f2f5;
             --text-muted: #8892a8;
             --border: #2a313f;
             --accent: #f1c40f;
+            --accent-hover: #f39c12;
+
+            /* Палитра категорий: чёрный фон + яркий синий шрифт + красная обводка */
+            --cat-bg: #000000;
+            --cat-bg-hover: #0a0a0a;
+            --cat-bg-active: #1d4a2e;
+            --cat-color: #4d9fff;
+            --cat-color-hover: #7ab8ff;
+            --cat-color-active: #a8ffcc;
+            --cat-border: #ff2a2a;         /* красная рамка */
+            --cat-border-hover: #ff4d4d;   /* ярче при наведении */
+            --cat-border-active: #2ecc71;  /* зелёная при выборе */
+            --cat-glow: rgba(255, 42, 42, 0.5);   /* красное свечение */
+            --cat-glow-blue: rgba(77, 159, 255, 0.5);
+            --cat-glow-green: rgba(46, 204, 113, 0.6);
         }
 
         [data-theme="light"] {
             --bg: #e8f4f8;
             --bg-card: #ffffff;
+            --bg-sidebar: #d4ecf5;
             --text: #1a2a3a;
             --text-muted: #5a7a8a;
             --border: #90c4d4;
             --accent: #00bcd4;
+            --accent-hover: #0097a7;
+
+            --cat-bg: #0a0a0a;
+            --cat-bg-hover: #1a1a1a;
+            --cat-bg-active: #1d7a3e;
+            --cat-color: #4d9fff;
+            --cat-color-hover: #7ab8ff;
+            --cat-color-active: #c8ffdc;
+            --cat-border: #e60000;
+            --cat-border-hover: #ff3333;
+            --cat-border-active: #2ecc71;
+            --cat-glow: rgba(230, 0, 0, 0.5);
+            --cat-glow-blue: rgba(77, 159, 255, 0.5);
+            --cat-glow-green: rgba(46, 204, 113, 0.6);
         }
 
         body {
@@ -36,7 +67,7 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* ===== ШАПКА С КАРТИНКОЙ ===== */
+        /* ===== ШАПКА ===== */
         .hero {
             position: relative;
             width: 100%;
@@ -108,67 +139,104 @@
             background: rgba(241, 196, 15, 0.2);
         }
 
-        /* ===== ПОИСК ===== */
-        .search-section {
+        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+        .layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
             padding: 24px;
-            display: flex;
-            justify-content: center;
         }
+
+        .content { min-width: 0; }
+
+        /* ===== ПОИСК ===== */
+        .search-section { margin-bottom: 24px; }
 
         .search-wrapper {
             width: 100%;
-            max-width: 800px;
             position: relative;
+            overflow: hidden;
+            border-radius: 50px;
         }
 
         .search-wrapper input {
             width: 100%;
-            padding: 14px 130px 14px 24px;
+            padding: 14px 140px 14px 24px;
             background: var(--bg-card);
-            border: 2px solid var(--border);
+            border: 3px solid #ff0000;
             border-radius: 50px;
             color: var(--text);
-            font-size: 16px;
+            font-size: 18px;
+            font-family: system-ui, -apple-system, sans-serif;
             outline: none;
-            transition: 0.2s;
+            transition: 0.3s ease;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
+            height: 56px;
+        }
+
+        .search-wrapper input::placeholder {
+            color: var(--text-muted);
+            font-size: 16px;
         }
 
         .search-wrapper input:focus {
-            border-color: var(--accent);
+            border-color: #ff3333;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.25);
+            transform: scale(1.01);
         }
 
-        .search-wrapper button {
+        .search-wrapper .search-btn {
             position: absolute;
-            right: 6px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: var(--accent);
-            color: #0b0e14;
+            background: #ff0000;
             border: none;
-            padding: 10px 24px;
+            color: #fff;
+            padding: 10px 28px;
             border-radius: 40px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
-            transition: 0.2s;
+            font-family: system-ui, -apple-system, sans-serif;
+            letter-spacing: 0.5px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            white-space: nowrap;
+            transition: right 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                        background 0.5s ease,
+                        box-shadow 0.5s ease;
         }
 
-        .search-wrapper button:hover {
-            opacity: 0.85;
+        .search-wrapper .search-btn:hover {
+            background: #cc0000;
+            transform: translateY(-50%) scale(0.97);
         }
 
-        /* ===== СЕТКА ДОРАМ ===== */
-        main {
-            flex: 1;
-            padding: 0 24px 40px;
+        .search-wrapper .search-btn.animating {
+            right: calc(100% - 140px);
+            background: #00cc44;
+            box-shadow: 0 0 40px rgba(0, 204, 68, 0.4);
         }
 
+        .search-wrapper .search-btn.returning {
+            right: 8px;
+            background: #ff0000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
+        }
+
+        /* ===== СЕТКА ===== */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
         }
 
         .card {
@@ -201,11 +269,114 @@
             border-top: 1px solid var(--border);
         }
 
+        /* ===== САЙДБАР ===== */
+        .sidebar {
+            background: var(--bg-sidebar);
+            border: 2px solid var(--cat-border);
+            border-radius: 16px;
+            padding: 20px 16px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            box-shadow: 0 0 30px rgba(255, 42, 42, 0.15);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--cat-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--cat-border);
+            text-align: center;
+            text-shadow:
+                0 0 10px var(--cat-glow-blue),
+                0 0 20px var(--cat-glow);
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            max-height: 72vh;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar { width: 5px; }
+        .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: var(--cat-border);
+            border-radius: 10px;
+        }
+
+        /* ===== ПУНКТ КАТЕГОРИИ ===== */
+        .sidebar-item {
+            display: block;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            border: 1.5px solid var(--cat-border);
+            background: var(--cat-bg);
+            color: var(--cat-color);
+            line-height: 1.35;
+            text-align: center;
+            letter-spacing: 0.3px;
+            /* Чёрная обводка вокруг синего текста */
+            text-shadow:
+                -1.5px -1.5px 0 #000,
+                1.5px -1.5px 0 #000,
+                -1.5px 1.5px 0 #000,
+                1.5px 1.5px 0 #000,
+                0 0 8px var(--cat-glow-blue);
+        }
+
+        .sidebar-item:hover {
+            background: var(--cat-bg-hover);
+            border-color: var(--cat-border-hover);
+            color: var(--cat-color-hover);
+            transform: translateX(4px);
+            box-shadow: 0 0 18px var(--cat-glow);
+        }
+
+        /* ===== АКТИВНЫЙ ПУНКТ (ЗЕЛЁНЫЙ) ===== */
+        .sidebar-item.active {
+            background: var(--cat-bg-active);
+            color: var(--cat-color-active);
+            border-color: var(--cat-border-active);
+            box-shadow:
+                0 0 20px var(--cat-glow-green),
+                0 0 35px var(--cat-glow);
+            font-weight: 800;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 10px var(--cat-glow-green);
+        }
+
+        .sidebar-divider {
+            height: 2px;
+            background: var(--cat-border);
+            opacity: 0.5;
+            margin: 8px 4px;
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--cat-glow);
+        }
+
         /* ===== ЗАГЛУШКА ===== */
         .placeholder {
             text-align: center;
             padding: 60px 20px;
             color: var(--text-muted);
+            grid-column: 1 / -1;
         }
 
         .placeholder h2 {
@@ -234,29 +405,76 @@
             text-decoration: none;
         }
 
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+                padding: 16px;
+                gap: 16px;
+            }
+
+            .sidebar {
+                position: static;
+                order: -1;
+            }
+
+            .sidebar-nav {
+                max-height: none;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .sidebar-item {
+                flex: 1 1 auto;
+                padding: 8px 12px;
+                font-size: 12px;
+                text-align: center;
+            }
+
+            .sidebar-divider { display: none; }
+            .sidebar-title { font-size: 16px; }
+        }
+
         @media (max-width: 600px) {
             .hero { height: 35vh; min-height: 220px; }
             .hero-title { font-size: 22px; }
             .theme-btn { width: 40px; height: 40px; font-size: 17px; }
             .hero-content { bottom: 16px; left: 16px; right: 16px; }
+
             .grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 16px;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 12px;
             }
+
             .search-wrapper input {
+                height: 48px;
                 padding: 12px 110px 12px 18px;
                 font-size: 14px;
             }
-            .search-wrapper button {
+
+            .search-wrapper .search-btn {
                 padding: 8px 18px;
                 font-size: 13px;
+                height: 36px;
+            }
+
+            .sidebar-item {
+                font-size: 11px;
+                padding: 6px 10px;
+                text-shadow:
+                    -1px -1px 0 #000,
+                    1px -1px 0 #000,
+                    -1px 1px 0 #000,
+                    1px 1px 0 #000,
+                    0 0 6px var(--cat-glow-blue);
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ШАПКА С КАРТИНКОЙ -->
+    <!-- ШАПКА -->
     <div class="hero">
         <img src="images/wLUEUAnoC6Y.jpg" alt="Дорамы от Дианы" />
         <div class="hero-overlay"></div>
@@ -266,23 +484,85 @@
         </div>
     </div>
 
-    <!-- ПОИСК -->
-    <div class="search-section">
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Поиск дорам..." />
-            <button id="searchBtn">Найти</button>
-        </div>
-    </div>
+    <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
+    <div class="layout">
 
-    <!-- СЕТКА ДОРАМ (пока заглушка) -->
-    <main>
-        <div class="grid" id="grid">
-            <div class="placeholder" style="grid-column: 1 / -1;">
-                <h2>🚧 Сайт в разработке</h2>
-                <p>Здесь скоро появятся дорамы.<br>Карточки будут подгружаться из папки <strong>images/</strong>.</p>
+        <div class="content">
+
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" placeholder="Поиск..." autocomplete="off" />
+                    <button class="search-btn" id="searchBtn">Найти</button>
+                </div>
             </div>
+
+            <div class="grid" id="grid">
+                <div class="placeholder">
+                    <h2>🚧 Сайт в разработке</h2>
+                    <p>Здесь скоро появятся фильмы и сериалы.<br>Карточки будут подгружаться из папки <strong>images/</strong>.</p>
+                </div>
+            </div>
+
         </div>
-    </main>
+
+        <!-- САЙДБАР -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Категории</div>
+            <nav class="sidebar-nav" id="sidebarNav">
+
+                <a class="sidebar-item active" data-category="all">Все</a>
+
+                <div class="sidebar-divider"></div>
+
+                <a class="sidebar-item" data-category="films-2026">Фильмы 2026</a>
+                <a class="sidebar-item" data-category="best-films-2026">Лучшие фильмы 2026</a>
+                <a class="sidebar-item" data-category="films-2025">Фильмы 2025</a>
+                <a class="sidebar-item" data-category="best-films-2025">Лучшие фильмы 2025</a>
+                <a class="sidebar-item" data-category="films-2024">Фильмы 2024</a>
+                <a class="sidebar-item" data-category="best-films-2024">Лучшие фильмы 2024</a>
+                <a class="sidebar-item" data-category="films-2023">Фильмы 2023</a>
+                <a class="sidebar-item" data-category="anime">Аниме</a>
+                <a class="sidebar-item" data-category="action">Фильмы боевики</a>
+                <a class="sidebar-item" data-category="biography">Биографические фильмы</a>
+                <a class="sidebar-item" data-category="war">Военные фильмы</a>
+                <a class="sidebar-item" data-category="drama">Драмы</a>
+                <a class="sidebar-item" data-category="detective">Детективы</a>
+                <a class="sidebar-item" data-category="documentary">Документальные фильмы</a>
+                <a class="sidebar-item" data-category="historical">Исторические фильмы</a>
+                <a class="sidebar-item" data-category="comedy">Комедии</a>
+                <a class="sidebar-item" data-category="crime">Криминальные фильмы</a>
+                <a class="sidebar-item" data-category="ru-melodrama">Русские мелодрамы</a>
+                <a class="sidebar-item" data-category="melodrama">Мелодрамы</a>
+                <a class="sidebar-item" data-category="cartoon">Мультфильмы</a>
+                <a class="sidebar-item" data-category="cartoon-series">Мультсериалы</a>
+                <a class="sidebar-item" data-category="adventure">Приключения</a>
+                <a class="sidebar-item" data-category="thriller">Триллеры</a>
+                <a class="sidebar-item" data-category="horror">Фильмы ужасов</a>
+                <a class="sidebar-item" data-category="sci-fi">Фантастические фильмы</a>
+                <a class="sidebar-item" data-category="fantasy">Фэнтези фильмы</a>
+                <a class="sidebar-item" data-category="ru-films">Русские фильмы</a>
+                <a class="sidebar-item" data-category="best-ru-films">Лучшие Русские фильмы</a>
+
+                <div class="sidebar-divider"></div>
+
+                <a class="sidebar-item" data-category="turkish-series">Турецкие сериалы на русском</a>
+                <a class="sidebar-item" data-category="series">Сериалы</a>
+                <a class="sidebar-item" data-category="series-2026">Сериалы 2026</a>
+                <a class="sidebar-item" data-category="series-2025">Сериалы 2025</a>
+                <a class="sidebar-item" data-category="series-2024">Сериалы 2024</a>
+                <a class="sidebar-item" data-category="best-series">Лучшие сериалы</a>
+                <a class="sidebar-item" data-category="dorama">Дорамы</a>
+                <a class="sidebar-item" data-category="films-new">Фильмы Новинки</a>
+                <a class="sidebar-item" data-category="best-films">Лучшие фильмы</a>
+                <a class="sidebar-item" data-category="ru-series">Русские сериалы</a>
+                <a class="sidebar-item" data-category="ru-series-2026">Русские сериалы 2026</a>
+                <a class="sidebar-item" data-category="ru-series-2025">Русские сериалы 2025</a>
+                <a class="sidebar-item" data-category="best-ru-series">Лучшие Русские сериалы</a>
+
+            </nav>
+        </aside>
+
+    </div>
 
     <!-- ПОДВАЛ -->
     <footer>
@@ -307,9 +587,49 @@
 
         applyTheme(theme);
 
-        // ===== ЗАГЛУШКА ПОИСКА =====
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            alert('Поиск пока не работает — сайт в разработке');
+        // ===== КАТЕГОРИИ =====
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', () => {
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                const category = item.dataset.category;
+                console.log('Выбрана категория:', category);
+            });
+        });
+
+        // ===== ПОИСК =====
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        let isAnimating = false;
+
+        function performSearch() {
+            if (isAnimating) return;
+            const query = searchInput.value.trim();
+            isAnimating = true;
+
+            searchBtn.classList.remove('returning');
+            searchBtn.classList.add('animating');
+
+            setTimeout(() => {
+                console.log('Поиск:', query);
+                searchBtn.classList.remove('animating');
+                searchBtn.classList.add('returning');
+
+                setTimeout(() => {
+                    searchBtn.classList.remove('returning');
+                    isAnimating = false;
+                }, 900);
+            }, 900);
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
         });
     </script>
 </body>
