@@ -169,7 +169,7 @@
         .layout {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 380px;
+            grid-template-columns: 1fr 420px;
             gap: 24px;
             width: 100%;
             padding: 24px;
@@ -182,14 +182,16 @@
             flex-direction: column;
         }
 
-        /* ===== ПОИСК ===== */
+        /* ===== ПОИСК — КОРОЧЕ ===== */
         .search-section {
             margin-bottom: 24px;
             flex-shrink: 0;
+            display: flex;
+            justify-content: flex-start;
         }
 
         .search-wrapper {
-            width: 100%;
+            width: 85%;
             position: relative;
             overflow: hidden;
             border-radius: 50px;
@@ -305,19 +307,19 @@
             background: var(--bg-sidebar);
             border: 2px solid var(--cat-border);
             border-radius: 16px;
-            padding: 22px 18px;
+            padding: 24px 20px;
             height: fit-content;
             box-shadow: 0 0 30px rgba(255, 42, 42, 0.15);
         }
 
         .sidebar-title {
-            font-size: 27px;
+            font-size: 30px;
             font-weight: 800;
             color: var(--cat-color);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
             border-bottom: 2px solid var(--cat-border);
             text-align: center;
             text-shadow:
@@ -325,19 +327,19 @@
                 0 0 20px var(--cat-glow);
         }
 
-        /* ===== КАТЕГОРИИ — ВЕРТИКАЛЬНОЙ ПОЛОСОЙ БЕЗ ПРОКРУТКИ ===== */
+        /* ===== КАТЕГОРИИ — ЕЩЁ КРУПНЕЕ ===== */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .sidebar-item {
             display: block;
-            padding: 15px 20px;
-            border-radius: 10px;
+            padding: 18px 24px;
+            border-radius: 12px;
             text-decoration: none;
-            font-size: 21px;
+            font-size: 25px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s ease;
@@ -376,7 +378,7 @@
             height: 2px;
             background: var(--cat-border);
             opacity: 0.5;
-            margin: 10px 4px;
+            margin: 12px 4px;
             border-radius: 2px;
         }
 
