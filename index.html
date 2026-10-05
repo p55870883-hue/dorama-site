@@ -31,6 +31,7 @@
             --cat-glow: rgba(255, 42, 42, 0.5);
             --cat-glow-blue: rgba(77, 159, 255, 0.5);
             --cat-glow-green: rgba(46, 204, 113, 0.6);
+            --cat-wrap-bg: #f1c40f;
         }
 
         [data-theme="light"] {
@@ -55,6 +56,7 @@
             --cat-glow: rgba(230, 0, 0, 0.5);
             --cat-glow-blue: rgba(77, 159, 255, 0.5);
             --cat-glow-green: rgba(46, 204, 113, 0.6);
+            --cat-wrap-bg: #e6a800;
         }
 
         html, body {
@@ -182,7 +184,7 @@
             flex-direction: column;
         }
 
-        /* ===== ПОИСК — НА ВСЮ ШИРИНУ ===== */
+        /* ===== ПОИСК ===== */
         .search-section {
             margin-bottom: 24px;
             flex-shrink: 0;
@@ -325,11 +327,14 @@
                 0 0 20px var(--cat-glow);
         }
 
-        /* ===== КАТЕГОРИИ — ЕЩЁ КРУПНЕЕ ===== */
+        /* ===== КАТЕГОРИИ — С ЖЁЛТОЙ ЗАЛИВКОЙ И ТОЛСТОЙ КРАСНОЙ ОБВОДКОЙ ===== */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
             gap: 9px;
+            padding: 12px;
+            background: var(--cat-wrap-bg);
+            border-radius: 14px;
         }
 
         .sidebar-item {
@@ -341,7 +346,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s ease;
-            border: 2px solid var(--cat-border);
+            border: 4px solid var(--cat-border);   /* ← было 2px, стало 4px */
             background: var(--cat-bg);
             color: var(--cat-color);
             line-height: 1.35;
@@ -373,9 +378,9 @@
         }
 
         .sidebar-divider {
-            height: 2px;
-            background: var(--cat-border);
-            opacity: 0.5;
+            height: 3px;
+            background: #000;
+            opacity: 0.4;
             margin: 14px 4px;
             border-radius: 2px;
         }
