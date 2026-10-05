@@ -57,41 +57,41 @@
             --cat-glow-green: rgba(46, 204, 113, 0.6);
         }
 
-        html {
+        html, body {
             background: var(--bg);
-            height: 100%;
+            color: var(--text);
+            font-family: system-ui, -apple-system, sans-serif;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
         }
 
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: system-ui, -apple-system, sans-serif;
-            min-height: 100vh;
-            min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            width: 100%;
         }
 
-        /* ===== КОНТЕЙНЕР ДЛЯ МАСШТАБИРОВАНИЯ ===== */
-        .viewport-scaler {
+        /* ===== ОБЁРТКА ДЛЯ МАСШТАБИРОВАНИЯ ===== */
+        /* Используем zoom — он реально меняет размер layout,
+           а не только визуально, как transform: scale() */
+        .zoom-wrap {
             width: 100%;
             display: flex;
-            justify-content: center;
-            overflow: hidden;
-            flex: 1;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: 100dvh;
         }
 
+        /* ===== ВНУТРЕННИЙ КОНТЕЙНЕР (виртуальный 1300px) ===== */
         .desktop-wrap {
-            width: 1400px;
+            width: 1300px;
             flex-shrink: 0;
-            transform-origin: top center;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             min-height: 100dvh;
+            transform-origin: top left;
         }
 
         /* ===== ШАПКА ===== */
@@ -432,8 +432,10 @@
 </head>
 <body>
 
-    <!-- КОНТЕЙНЕР ДЛЯ МАСШТАБИРОВАНИЯ -->
-    <div class="viewport-scaler">
+    <!-- ОБЁРТКА ДЛЯ ZOOM -->
+    <div class="zoom-wrap" id="zoomWrap">
+
+        <!-- ВНУТРЕННИЙ КОНТЕЙНЕР 1300px -->
         <div class="desktop-wrap" id="desktopWrap">
 
             <!-- ШАПКА -->
@@ -535,22 +537,28 @@
     </div>
 
     <script>
-        // ===== МАСШТАБИРОВАНИЕ ПОД ЭКРАН =====
+        // ===== МАСШТАБИРОВАНИЕ ЧЕРЕЗ CSS ZOOM =====
+        // zoom реально уменьшает layout, а не только визуально (как transform: scale)
+        // Это значит, что горизонтальной прокрутки не будет
         function fitToScreen() {
             const wrap = document.getElementById('desktopWrap');
-            const scaler = wrap.parentElement;
-            const DESIGN_WIDTH = 1300; // сайт чуть мельче, но целиком влезает по бокам
+            const zoomWrap = document.getElementById('zoomWrap');
+            const DESIGN_WIDTH = 1300;
             const screenWidth = window.innerWidth;
             let scale = screenWidth / DESIGN_WIDTH;
             if (scale > 1) scale = 1;
 
-            wrap.style.transform = `scale(${scale})`;
+            // Применяем zoom ко всему сайту
+            zoomWrap.style.zoom = scale;
 
-            // Компенсация высоты
-            const realHeight = wrap.scrollHeight;
-            scaler.style.height = (realHeight * scale) + 'px';
-
-            document.body.style.minHeight = '100vh';
+            // Для Firefox, где zoom не поддерживается — fallback через transform
+            if (typeof zoomWrap.style.zoom === 'undefined') {
+                wrap.style.transform = `scale(${scale})`;
+                wrap.style.transformOrigin = 'top left';
+                wrap.style.width = DESIGN_WIDTH + 'px';
+                const realHeight = wrap.scrollHeight;
+                zoomWrap.style.height = (realHeight * scale) + 'px';
+            }
         }
 
         window.addEventListener('resize', fitToScreen);
