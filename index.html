@@ -166,7 +166,7 @@
             gap: 24px;
             width: 100%;
             padding: 24px;
-            min-height: 60vh;
+            align-items: start;
         }
 
         .content {
@@ -254,7 +254,7 @@
             background: #ff0000;
         }
 
-        /* ===== ПАНЕЛЬ КНОПОК ПОД ПОИСКОМ ===== */
+        /* ===== ПАНЕЛЬ КНОПОК ===== */
         .toolbar {
             display: flex;
             gap: 12px;
@@ -316,7 +316,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
-            flex: 1;
             align-content: start;
         }
 
@@ -340,7 +339,6 @@
             box-shadow: 0 0 30px var(--cat-glow);
         }
 
-        /* Обёртка для постера + наложения */
         .card-poster-wrap {
             position: relative;
             width: 100%;
@@ -356,7 +354,6 @@
             display: block;
         }
 
-        /* Рейтинг — звёзды в верхнем левом углу */
         .card-rating {
             position: absolute;
             top: 10px;
@@ -380,7 +377,6 @@
             font-size: 14px;
         }
 
-        /* Сердечко — в верхнем правом углу */
         .card-fav {
             position: absolute;
             top: 10px;
@@ -414,7 +410,6 @@
             box-shadow: 0 0 20px var(--cat-glow);
         }
 
-        /* Название */
         .card-title {
             padding: 12px 14px 8px;
             text-align: center;
@@ -434,7 +429,6 @@
                 0 0 6px var(--cat-glow-blue);
         }
 
-        /* Кнопка "Смотреть все серии" */
         .card-watch-btn {
             display: block;
             margin: 8px 14px 14px;
@@ -465,14 +459,18 @@
             transform: scale(1.02);
         }
 
-        /* ===== САЙДБАР ===== */
+        /* ===== САЙДБАР — STICKY + ВНУТРЕННЯЯ ПРОКРУТКА ===== */
         .sidebar {
             background: var(--bg-sidebar);
             border: 2px solid var(--cat-border);
             border-radius: 16px;
             padding: 26px 22px;
-            height: fit-content;
             box-shadow: 0 0 30px rgba(255, 42, 42, 0.15);
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-title {
@@ -488,12 +486,44 @@
             text-shadow:
                 0 0 10px var(--cat-glow-blue),
                 0 0 20px var(--cat-glow);
+            flex-shrink: 0;
         }
 
+        /* Прокручиваемый список категорий */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
             gap: 9px;
+            overflow-y: auto;
+            padding-right: 8px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Стилизация скроллбара */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: var(--cat-border);
+            border-radius: 4px;
+            box-shadow: 0 0 8px var(--cat-glow);
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: var(--cat-border-hover);
+        }
+
+        /* Firefox */
+        .sidebar-nav {
+            scrollbar-width: thin;
+            scrollbar-color: var(--cat-border) rgba(0, 0, 0, 0.3);
         }
 
         .sidebar-item {
@@ -517,6 +547,7 @@
                 -1.5px 1.5px 0 #000,
                 1.5px 1.5px 0 #000,
                 0 0 8px var(--cat-glow-blue);
+            flex-shrink: 0;
         }
 
         .sidebar-item:hover {
@@ -540,6 +571,7 @@
             opacity: 0.4;
             margin: 14px 4px;
             border-radius: 2px;
+            flex-shrink: 0;
         }
 
         /* ===== ПУСТОЙ РЕЗУЛЬТАТ ===== */
@@ -613,7 +645,6 @@
     <div class="zoom-wrap" id="zoomWrap">
         <div class="desktop-wrap" id="desktopWrap">
 
-            <!-- ШАПКА -->
             <div class="hero">
                 <img src="images/wLUEUAnoC6Y.jpg" alt="Дорамы от Дианы" />
                 <div class="hero-overlay"></div>
@@ -623,12 +654,10 @@
                 </div>
             </div>
 
-            <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
             <div class="layout">
 
                 <div class="content">
 
-                    <!-- ПОИСК -->
                     <div class="search-section">
                         <div class="search-wrapper">
                             <input type="text" id="searchInput" placeholder="Поиск..." autocomplete="off" />
@@ -636,7 +665,6 @@
                         </div>
                     </div>
 
-                    <!-- ПАНЕЛЬ: Избранное + Сброс -->
                     <div class="toolbar">
                         <button class="toolbar-btn" id="favoritesToggle">
                             ❤️ Избранное <span class="badge" id="favCount">0</span>
@@ -646,12 +674,11 @@
                         </button>
                     </div>
 
-                    <!-- СЕТКА ФИЛЬМОВ -->
                     <div class="grid" id="grid"></div>
 
                 </div>
 
-                <!-- САЙДБАР -->
+                <!-- САЙДБАР С ПРОКРУТКОЙ -->
                 <aside class="sidebar">
                     <div class="sidebar-title">Категории</div>
                     <nav class="sidebar-nav" id="sidebarNav">
@@ -721,8 +748,6 @@
 
     <script>
         // ===== БАЗА ФИЛЬМОВ =====
-        // categories — массив ID категорий, к которым относится фильм
-        // rating — рейтинг от 0 до 10
         const MOVIES = [
             {
                 id: 'drama1',
@@ -732,15 +757,6 @@
                 categories: ['dorama', 'series', 'series-2026', 'best-series'],
                 episodes: 6
             }
-            // Добавляйте сюда новые фильмы:
-            // {
-            //     id: 'drama2',
-            //     title: 'Лазурная весна',
-            //     poster: 'images/Wt.jpg',
-            //     rating: 9.0,
-            //     categories: ['dorama', 'melodrama', 'series-2025'],
-            //     episodes: 6
-            // },
         ];
 
         // ===== СОСТОЯНИЕ =====
@@ -763,17 +779,14 @@
         function getFilteredMovies() {
             let result = [...MOVIES];
 
-            // Фильтр по категории
             if (currentCategory !== 'all') {
                 result = result.filter(m => m.categories && m.categories.includes(currentCategory));
             }
 
-            // Фильтр "только избранное"
             if (showFavoritesOnly) {
                 result = result.filter(m => favorites.includes(m.id));
             }
 
-            // Поиск по названию
             if (currentSearch.trim()) {
                 const q = currentSearch.toLowerCase().trim();
                 result = result.filter(m => m.title.toLowerCase().includes(q));
@@ -819,7 +832,6 @@
                 `;
             }).join('');
 
-            // Обработчики сердечек
             grid.querySelectorAll('.card-fav').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -857,16 +869,18 @@
                 document.getElementById('favoritesToggle').classList.remove('active');
                 updateResetButton();
                 renderGrid();
+
+                // Прокручиваем список к активной категории
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             });
         });
 
-        // ===== ИЗБРАННОЕ (кнопка в тулбаре) =====
+        // ===== ИЗБРАННОЕ (тулбар) =====
         document.getElementById('favoritesToggle').addEventListener('click', function() {
             showFavoritesOnly = !showFavoritesOnly;
             this.classList.toggle('active', showFavoritesOnly);
 
             if (showFavoritesOnly) {
-                // Сбрасываем категорию при переходе в избранное
                 sidebarItems.forEach(i => i.classList.remove('active'));
                 document.querySelector('.sidebar-item[data-category="all"]').classList.add('active');
                 currentCategory = 'all';
@@ -875,7 +889,7 @@
             renderGrid();
         });
 
-        // ===== СБРОС ФИЛЬТРА =====
+        // ===== СБРОС =====
         document.getElementById('resetFilter').addEventListener('click', () => {
             currentCategory = 'all';
             showFavoritesOnly = false;
@@ -926,7 +940,6 @@
             if (e.key === 'Enter') { e.preventDefault(); performSearch(); }
         });
 
-        // Живой поиск при очистке
         searchInput.addEventListener('input', () => {
             if (!searchInput.value.trim() && currentSearch.trim()) {
                 currentSearch = '';
