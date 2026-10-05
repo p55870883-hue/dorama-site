@@ -67,12 +67,8 @@
             overflow-x: hidden;
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
+        body { display: flex; flex-direction: column; }
 
-        /* ===== ОБЁРТКА ДЛЯ ZOOM ===== */
         .zoom-wrap {
             width: 100%;
             display: flex;
@@ -81,7 +77,6 @@
             min-height: 100dvh;
         }
 
-        /* ===== ВНУТРЕННИЙ КОНТЕЙНЕР 1300px ===== */
         .desktop-wrap {
             width: 1300px;
             flex-shrink: 0;
@@ -142,9 +137,7 @@
             letter-spacing: 0.5px;
         }
 
-        .hero-title span {
-            color: var(--accent);
-        }
+        .hero-title span { color: var(--accent); }
 
         .theme-btn {
             background: rgba(0, 0, 0, 0.6);
@@ -184,7 +177,7 @@
 
         /* ===== ПОИСК ===== */
         .search-section {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             flex-shrink: 0;
         }
 
@@ -261,43 +254,215 @@
             background: #ff0000;
         }
 
+        /* ===== ПАНЕЛЬ КНОПОК ПОД ПОИСКОМ ===== */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            background: #000;
+            border: 3px solid var(--cat-border);
+            border-radius: 12px;
+            color: var(--cat-color);
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 8px var(--cat-glow-blue);
+        }
+
+        .toolbar-btn:hover {
+            background: var(--cat-bg-hover);
+            border-color: var(--cat-border-hover);
+            box-shadow: 0 0 18px var(--cat-glow);
+        }
+
+        .toolbar-btn.active {
+            background: var(--cat-bg-active);
+            color: var(--cat-color-active);
+            border-color: var(--cat-border-active);
+            box-shadow: 0 0 20px var(--cat-glow-green);
+        }
+
+        .toolbar-btn .badge {
+            background: var(--cat-border);
+            color: #000;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 13px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .toolbar-btn.active .badge {
+            background: var(--cat-border-active);
+        }
+
         /* ===== СЕТКА ===== */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
             flex: 1;
             align-content: start;
         }
 
+        /* ===== КАРТОЧКА ===== */
         .card {
             background: var(--bg-card);
-            border: 1px solid var(--border);
+            border: 3px solid var(--cat-border);
             border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
             transition: 0.25s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 15px rgba(255, 42, 42, 0.2);
         }
 
         .card:hover {
             transform: translateY(-6px);
-            border-color: var(--accent);
+            border-color: var(--cat-border-hover);
+            box-shadow: 0 0 30px var(--cat-glow);
         }
 
-        .card img {
+        /* Обёртка для постера + наложения */
+        .card-poster-wrap {
+            position: relative;
             width: 100%;
             aspect-ratio: 2 / 3;
-            object-fit: cover;
-            display: block;
+            overflow: hidden;
             background: #1a212b;
         }
 
-        .card .title {
-            padding: 12px;
-            text-align: center;
+        .card-poster-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Рейтинг — звёзды в верхнем левом углу */
+        .card-rating {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 4px 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+            z-index: 3;
+            text-shadow: 0 0 6px rgba(241, 196, 15, 0.6);
+        }
+
+        .card-rating .star {
+            color: var(--accent);
             font-size: 14px;
-            font-weight: 600;
-            border-top: 1px solid var(--border);
+        }
+
+        /* Сердечко — в верхнем правом углу */
+        .card-fav {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--cat-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            transition: 0.2s;
+            font-size: 20px;
+            color: #fff;
+            user-select: none;
+        }
+
+        .card-fav:hover {
+            transform: scale(1.15);
+            border-color: var(--cat-border-hover);
+            box-shadow: 0 0 15px var(--cat-glow);
+        }
+
+        .card-fav.favorited {
+            background: rgba(255, 42, 42, 0.3);
+            border-color: var(--cat-border);
+            color: #ff2a2a;
+            box-shadow: 0 0 20px var(--cat-glow);
+        }
+
+        /* Название */
+        .card-title {
+            padding: 12px 14px 8px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--cat-color);
+            line-height: 1.3;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 6px var(--cat-glow-blue);
+        }
+
+        /* Кнопка "Смотреть все серии" */
+        .card-watch-btn {
+            display: block;
+            margin: 8px 14px 14px;
+            padding: 12px;
+            background: #000;
+            border: 3px solid var(--cat-border);
+            border-radius: 10px;
+            color: var(--cat-color);
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 6px var(--cat-glow-blue);
+        }
+
+        .card-watch-btn:hover {
+            background: var(--cat-bg-hover);
+            border-color: var(--cat-border-hover);
+            box-shadow: 0 0 18px var(--cat-glow);
+            transform: scale(1.02);
         }
 
         /* ===== САЙДБАР ===== */
@@ -325,7 +490,6 @@
                 0 0 20px var(--cat-glow);
         }
 
-        /* ===== КАТЕГОРИИ — БЕЗ ЖЁЛТОЙ ЗАЛИВКИ, ЖИРНАЯ КРАСНАЯ ОБВОДКА ===== */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -366,9 +530,7 @@
             background: var(--cat-bg-active);
             color: var(--cat-color-active);
             border-color: var(--cat-border-active);
-            box-shadow:
-                0 0 20px var(--cat-glow-green),
-                0 0 35px var(--cat-glow);
+            box-shadow: 0 0 20px var(--cat-glow-green);
             font-weight: 800;
         }
 
@@ -380,23 +542,19 @@
             border-radius: 2px;
         }
 
-        /* ===== ЗАГЛУШКА ===== */
-        .placeholder {
+        /* ===== ПУСТОЙ РЕЗУЛЬТАТ ===== */
+        .no-results {
+            grid-column: 1 / -1;
             text-align: center;
             padding: 60px 20px;
             color: var(--text-muted);
-            grid-column: 1 / -1;
+            font-size: 20px;
         }
 
-        .placeholder h2 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            color: var(--text);
-        }
-
-        .placeholder p {
-            font-size: 16px;
-            line-height: 1.6;
+        .no-results .icon {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 16px;
         }
 
         /* ===== ПОДВАЛ ===== */
@@ -415,14 +573,44 @@
             color: var(--accent);
             text-decoration: none;
         }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: #000;
+            border: 3px solid var(--cat-border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: var(--cat-color);
+            font-size: 15px;
+            font-weight: 700;
+            box-shadow: 0 0 25px var(--cat-glow);
+            animation: slideIn 0.3s ease;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- ОБЁРТКА ДЛЯ ZOOM -->
     <div class="zoom-wrap" id="zoomWrap">
-
-        <!-- ВНУТРЕННИЙ КОНТЕЙНЕР 1300px -->
         <div class="desktop-wrap" id="desktopWrap">
 
             <!-- ШАПКА -->
@@ -440,6 +628,7 @@
 
                 <div class="content">
 
+                    <!-- ПОИСК -->
                     <div class="search-section">
                         <div class="search-wrapper">
                             <input type="text" id="searchInput" placeholder="Поиск..." autocomplete="off" />
@@ -447,12 +636,18 @@
                         </div>
                     </div>
 
-                    <div class="grid" id="grid">
-                        <div class="placeholder">
-                            <h2>🚧 Сайт в разработке</h2>
-                            <p>Здесь скоро появятся фильмы и сериалы.<br>Карточки будут подгружаться из папки <strong>images/</strong>.</p>
-                        </div>
+                    <!-- ПАНЕЛЬ: Избранное + Сброс -->
+                    <div class="toolbar">
+                        <button class="toolbar-btn" id="favoritesToggle">
+                            ❤️ Избранное <span class="badge" id="favCount">0</span>
+                        </button>
+                        <button class="toolbar-btn" id="resetFilter" style="display:none;">
+                            ✕ Сбросить фильтр
+                        </button>
                     </div>
+
+                    <!-- СЕТКА ФИЛЬМОВ -->
+                    <div class="grid" id="grid"></div>
 
                 </div>
 
@@ -515,7 +710,6 @@
 
             </div>
 
-            <!-- ПОДВАЛ -->
             <footer>
                 © 2026 <a href="index.html">Дорамы от Дианы</a> — Все права защищены.
             </footer>
@@ -523,8 +717,235 @@
         </div>
     </div>
 
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
-        // ===== МАСШТАБИРОВАНИЕ ЧЕРЕЗ CSS ZOOM =====
+        // ===== БАЗА ФИЛЬМОВ =====
+        // categories — массив ID категорий, к которым относится фильм
+        // rating — рейтинг от 0 до 10
+        const MOVIES = [
+            {
+                id: 'drama1',
+                title: 'Завтра снова на работу!',
+                poster: 'images/DR.jpg',
+                rating: 8.5,
+                categories: ['dorama', 'series', 'series-2026', 'best-series'],
+                episodes: 6
+            }
+            // Добавляйте сюда новые фильмы:
+            // {
+            //     id: 'drama2',
+            //     title: 'Лазурная весна',
+            //     poster: 'images/Wt.jpg',
+            //     rating: 9.0,
+            //     categories: ['dorama', 'melodrama', 'series-2025'],
+            //     episodes: 6
+            // },
+        ];
+
+        // ===== СОСТОЯНИЕ =====
+        let currentCategory = 'all';
+        let showFavoritesOnly = false;
+        let currentSearch = '';
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+        // ===== СОХРАНЕНИЕ =====
+        function saveFavorites() {
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavCount();
+        }
+
+        function updateFavCount() {
+            document.getElementById('favCount').textContent = favorites.length;
+        }
+
+        // ===== ФИЛЬТРАЦИЯ =====
+        function getFilteredMovies() {
+            let result = [...MOVIES];
+
+            // Фильтр по категории
+            if (currentCategory !== 'all') {
+                result = result.filter(m => m.categories && m.categories.includes(currentCategory));
+            }
+
+            // Фильтр "только избранное"
+            if (showFavoritesOnly) {
+                result = result.filter(m => favorites.includes(m.id));
+            }
+
+            // Поиск по названию
+            if (currentSearch.trim()) {
+                const q = currentSearch.toLowerCase().trim();
+                result = result.filter(m => m.title.toLowerCase().includes(q));
+            }
+
+            return result;
+        }
+
+        // ===== РЕНДЕР =====
+        function renderGrid() {
+            const grid = document.getElementById('grid');
+            const filtered = getFilteredMovies();
+
+            if (filtered.length === 0) {
+                if (showFavoritesOnly) {
+                    grid.innerHTML = '<div class="no-results"><span class="icon">💔</span>В избранном пока ничего нет</div>';
+                } else if (currentCategory !== 'all') {
+                    grid.innerHTML = '<div class="no-results"><span class="icon">📂</span>В этой категории пока пусто</div>';
+                } else {
+                    grid.innerHTML = '<div class="no-results"><span class="icon">🔍</span>Ничего не найдено</div>';
+                }
+                return;
+            }
+
+            grid.innerHTML = filtered.map(m => {
+                const isFav = favorites.includes(m.id);
+                return `
+                    <div class="card" data-id="${m.id}">
+                        <div class="card-poster-wrap">
+                            <img src="${m.poster}" alt="${m.title}" onerror="this.src='images/Log.png'">
+                            <div class="card-rating">
+                                <span class="star">★</span> ${m.rating.toFixed(1)}
+                            </div>
+                            <div class="card-fav ${isFav ? 'favorited' : ''}" data-fav-id="${m.id}">
+                                ${isFav ? '❤️' : '🤍'}
+                            </div>
+                        </div>
+                        <div class="card-title">${m.title}</div>
+                        <a class="card-watch-btn" href="watch.html?drama=${m.id}">
+                            ▶ Смотреть все серии
+                        </a>
+                    </div>
+                `;
+            }).join('');
+
+            // Обработчики сердечек
+            grid.querySelectorAll('.card-fav').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const id = btn.dataset.favId;
+                    toggleFavorite(id);
+                });
+            });
+        }
+
+        // ===== ИЗБРАННОЕ =====
+        function toggleFavorite(id) {
+            const idx = favorites.indexOf(id);
+            if (idx > -1) {
+                favorites.splice(idx, 1);
+                showToast('Удалено из избранного');
+            } else {
+                favorites.push(id);
+                showToast('❤️ Добавлено в избранное');
+            }
+            saveFavorites();
+            renderGrid();
+        }
+
+        // ===== КАТЕГОРИИ =====
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                currentCategory = item.dataset.category;
+                showFavoritesOnly = false;
+                document.getElementById('favoritesToggle').classList.remove('active');
+                updateResetButton();
+                renderGrid();
+            });
+        });
+
+        // ===== ИЗБРАННОЕ (кнопка в тулбаре) =====
+        document.getElementById('favoritesToggle').addEventListener('click', function() {
+            showFavoritesOnly = !showFavoritesOnly;
+            this.classList.toggle('active', showFavoritesOnly);
+
+            if (showFavoritesOnly) {
+                // Сбрасываем категорию при переходе в избранное
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                document.querySelector('.sidebar-item[data-category="all"]').classList.add('active');
+                currentCategory = 'all';
+            }
+            updateResetButton();
+            renderGrid();
+        });
+
+        // ===== СБРОС ФИЛЬТРА =====
+        document.getElementById('resetFilter').addEventListener('click', () => {
+            currentCategory = 'all';
+            showFavoritesOnly = false;
+            currentSearch = '';
+            document.getElementById('searchInput').value = '';
+            sidebarItems.forEach(i => i.classList.remove('active'));
+            document.querySelector('.sidebar-item[data-category="all"]').classList.add('active');
+            document.getElementById('favoritesToggle').classList.remove('active');
+            updateResetButton();
+            renderGrid();
+        });
+
+        function updateResetButton() {
+            const btn = document.getElementById('resetFilter');
+            if (currentCategory !== 'all' || showFavoritesOnly || currentSearch.trim()) {
+                btn.style.display = 'flex';
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
+        // ===== ПОИСК =====
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        let isAnimating = false;
+
+        function performSearch() {
+            if (isAnimating) return;
+            currentSearch = searchInput.value;
+            isAnimating = true;
+            searchBtn.classList.remove('returning');
+            searchBtn.classList.add('animating');
+
+            setTimeout(() => {
+                renderGrid();
+                updateResetButton();
+                searchBtn.classList.remove('animating');
+                searchBtn.classList.add('returning');
+                setTimeout(() => {
+                    searchBtn.classList.remove('returning');
+                    isAnimating = false;
+                }, 900);
+            }, 900);
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); performSearch(); }
+        });
+
+        // Живой поиск при очистке
+        searchInput.addEventListener('input', () => {
+            if (!searchInput.value.trim() && currentSearch.trim()) {
+                currentSearch = '';
+                renderGrid();
+                updateResetButton();
+            }
+        });
+
+        // ===== TOAST =====
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        // ===== МАСШТАБИРОВАНИЕ =====
         function fitToScreen() {
             const wrap = document.getElementById('desktopWrap');
             const zoomWrap = document.getElementById('zoomWrap');
@@ -532,10 +953,7 @@
             const screenWidth = window.innerWidth;
             let scale = screenWidth / DESIGN_WIDTH;
             if (scale > 1) scale = 1;
-
             zoomWrap.style.zoom = scale;
-
-            // Fallback для Firefox
             if (typeof zoomWrap.style.zoom === 'undefined') {
                 wrap.style.transform = `scale(${scale})`;
                 wrap.style.transformOrigin = 'top left';
@@ -544,13 +962,9 @@
                 zoomWrap.style.height = (realHeight * scale) + 'px';
             }
         }
-
         window.addEventListener('resize', fitToScreen);
         window.addEventListener('load', fitToScreen);
-        window.addEventListener('orientationchange', () => {
-            setTimeout(fitToScreen, 200);
-        });
-
+        window.addEventListener('orientationchange', () => setTimeout(fitToScreen, 200));
         fitToScreen();
         setTimeout(fitToScreen, 100);
         setTimeout(fitToScreen, 500);
@@ -573,50 +987,9 @@
 
         applyTheme(theme);
 
-        // ===== КАТЕГОРИИ =====
-        const sidebarItems = document.querySelectorAll('.sidebar-item');
-
-        sidebarItems.forEach(item => {
-            item.addEventListener('click', () => {
-                sidebarItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                const category = item.dataset.category;
-                console.log('Выбрана категория:', category);
-            });
-        });
-
-        // ===== ПОИСК =====
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        let isAnimating = false;
-
-        function performSearch() {
-            if (isAnimating) return;
-            const query = searchInput.value.trim();
-            isAnimating = true;
-
-            searchBtn.classList.remove('returning');
-            searchBtn.classList.add('animating');
-
-            setTimeout(() => {
-                console.log('Поиск:', query);
-                searchBtn.classList.remove('animating');
-                searchBtn.classList.add('returning');
-
-                setTimeout(() => {
-                    searchBtn.classList.remove('returning');
-                    isAnimating = false;
-                }, 900);
-            }, 900);
-        }
-
-        searchBtn.addEventListener('click', performSearch);
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                performSearch();
-            }
-        });
+        // ===== СТАРТ =====
+        updateFavCount();
+        renderGrid();
     </script>
 </body>
 </html>
