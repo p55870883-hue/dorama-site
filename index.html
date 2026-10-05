@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1280, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Дорамы от Дианы</title>
     <link rel="icon" href="images/Log.png" type="image/png">
     <style>
@@ -18,17 +18,16 @@
             --accent: #f1c40f;
             --accent-hover: #f39c12;
 
-            /* Палитра категорий: чёрный фон + яркий синий шрифт + красная обводка */
             --cat-bg: #000000;
             --cat-bg-hover: #0a0a0a;
             --cat-bg-active: #1d4a2e;
             --cat-color: #4d9fff;
             --cat-color-hover: #7ab8ff;
             --cat-color-active: #a8ffcc;
-            --cat-border: #ff2a2a;         /* красная рамка */
-            --cat-border-hover: #ff4d4d;   /* ярче при наведении */
-            --cat-border-active: #2ecc71;  /* зелёная при выборе */
-            --cat-glow: rgba(255, 42, 42, 0.5);   /* красное свечение */
+            --cat-border: #ff2a2a;
+            --cat-border-hover: #ff4d4d;
+            --cat-border-active: #2ecc71;
+            --cat-glow: rgba(255, 42, 42, 0.5);
             --cat-glow-blue: rgba(77, 159, 255, 0.5);
             --cat-glow-green: rgba(46, 204, 113, 0.6);
         }
@@ -312,7 +311,6 @@
             border-radius: 10px;
         }
 
-        /* ===== ПУНКТ КАТЕГОРИИ ===== */
         .sidebar-item {
             display: block;
             padding: 10px 14px;
@@ -328,7 +326,6 @@
             line-height: 1.35;
             text-align: center;
             letter-spacing: 0.3px;
-            /* Чёрная обводка вокруг синего текста */
             text-shadow:
                 -1.5px -1.5px 0 #000,
                 1.5px -1.5px 0 #000,
@@ -345,7 +342,6 @@
             box-shadow: 0 0 18px var(--cat-glow);
         }
 
-        /* ===== АКТИВНЫЙ ПУНКТ (ЗЕЛЁНЫЙ) ===== */
         .sidebar-item.active {
             background: var(--cat-bg-active);
             color: var(--cat-color-active);
@@ -405,71 +401,7 @@
             text-decoration: none;
         }
 
-        /* ===== АДАПТИВ ===== */
-        @media (max-width: 900px) {
-            .layout {
-                grid-template-columns: 1fr;
-                padding: 16px;
-                gap: 16px;
-            }
-
-            .sidebar {
-                position: static;
-                order: -1;
-            }
-
-            .sidebar-nav {
-                max-height: none;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-
-            .sidebar-item {
-                flex: 1 1 auto;
-                padding: 8px 12px;
-                font-size: 12px;
-                text-align: center;
-            }
-
-            .sidebar-divider { display: none; }
-            .sidebar-title { font-size: 16px; }
-        }
-
-        @media (max-width: 600px) {
-            .hero { height: 35vh; min-height: 220px; }
-            .hero-title { font-size: 22px; }
-            .theme-btn { width: 40px; height: 40px; font-size: 17px; }
-            .hero-content { bottom: 16px; left: 16px; right: 16px; }
-
-            .grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 12px;
-            }
-
-            .search-wrapper input {
-                height: 48px;
-                padding: 12px 110px 12px 18px;
-                font-size: 14px;
-            }
-
-            .search-wrapper .search-btn {
-                padding: 8px 18px;
-                font-size: 13px;
-                height: 36px;
-            }
-
-            .sidebar-item {
-                font-size: 11px;
-                padding: 6px 10px;
-                text-shadow:
-                    -1px -1px 0 #000,
-                    1px -1px 0 #000,
-                    -1px 1px 0 #000,
-                    1px 1px 0 #000,
-                    0 0 6px var(--cat-glow-blue);
-            }
-        }
+        /* ===== НЕТ МЕДИА-ЗАПРОСОВ — сайт везде выглядит одинаково ===== */
     </style>
 </head>
 <body>
