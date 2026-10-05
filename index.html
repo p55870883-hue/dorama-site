@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0e14">
     <title>Дорамы от Дианы</title>
     <link rel="icon" href="images/Log.png" type="image/png">
     <style>
@@ -56,23 +57,31 @@
             --cat-glow-green: rgba(46, 204, 113, 0.6);
         }
 
-        html, body {
+        html {
+            background: var(--bg);
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
             background: var(--bg);
             color: var(--text);
             font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh; /* Для Android с учётом адресной строки */
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
             width: 100%;
-            min-height: 100vh;
         }
 
         /* ===== КОНТЕЙНЕР ДЛЯ МАСШТАБИРОВАНИЯ ===== */
-        /* Все стили рассчитаны на десктопную ширину 1400px,
-           а потом уменьшаются через transform: scale() */
         .viewport-scaler {
             width: 100%;
             display: flex;
             justify-content: center;
             overflow: hidden;
+            flex: 1;
         }
 
         .desktop-wrap {
@@ -82,6 +91,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            min-height: 100dvh;
         }
 
         /* ===== ШАПКА ===== */
@@ -91,6 +101,7 @@
             height: 45vh;
             min-height: 280px;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .hero img {
@@ -163,14 +174,22 @@
             grid-template-columns: 1fr 320px;
             gap: 24px;
             width: 100%;
-            margin: 0 auto;
             padding: 24px;
+            /* Минимальная высота, чтобы сайт растянулся на экран */
+            min-height: 60vh;
         }
 
-        .content { min-width: 0; }
+        .content {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* ===== ПОИСК ===== */
-        .search-section { margin-bottom: 24px; }
+        .search-section {
+            margin-bottom: 24px;
+            flex-shrink: 0;
+        }
 
         .search-wrapper {
             width: 100%;
@@ -250,6 +269,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
+            flex: 1;
+            align-content: start;
         }
 
         .card {
@@ -400,6 +421,8 @@
             text-align: center;
             color: var(--text-muted);
             font-size: 14px;
+            flex-shrink: 0;
+            margin-top: auto;
         }
 
         footer a {
@@ -514,30 +537,36 @@
 
     <script>
         // ===== МАСШТАБИРОВАНИЕ ПОД ЭКРАН =====
-        // Сайт свёрстан под 1400px. Если экран меньше — уменьшаем через transform: scale()
         function fitToScreen() {
             const wrap = document.getElementById('desktopWrap');
+            const scaler = wrap.parentElement;
             const DESIGN_WIDTH = 1400;
             const screenWidth = window.innerWidth;
-            const scale = screenWidth / DESIGN_WIDTH;
+            let scale = screenWidth / DESIGN_WIDTH;
+            if (scale > 1) scale = 1;
 
-            if (scale < 1) {
-                wrap.style.transform = `scale(${scale})`;
-                // Компенсируем отступ снизу, так как transform не влияет на поток
-                wrap.style.marginBottom = `calc(-${(1 - scale) * 100}%)`;
-                // Или можно через height:
-                const realHeight = wrap.scrollHeight;
-                wrap.parentElement.style.height = (realHeight * scale) + 'px';
-            } else {
-                wrap.style.transform = 'scale(1)';
-                wrap.style.marginBottom = '0';
-                wrap.parentElement.style.height = 'auto';
-            }
+            wrap.style.transform = `scale(${scale})`;
+
+            // Компенсация высоты, чтобы родитель занимал правильную высоту
+            // (transform не влияет на поток документа)
+            const realHeight = wrap.scrollHeight;
+            scaler.style.height = (realHeight * scale) + 'px';
+
+            // Растягиваем body, чтобы подвал всегда был внизу
+            document.body.style.minHeight = '100vh';
         }
 
         window.addEventListener('resize', fitToScreen);
         window.addEventListener('load', fitToScreen);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(fitToScreen, 200);
+        });
+
+        // Вызываем несколько раз с задержкой, чтобы поймать момент загрузки картинок
         fitToScreen();
+        setTimeout(fitToScreen, 100);
+        setTimeout(fitToScreen, 500);
+        setTimeout(fitToScreen, 1500);
 
         // ===== ТЕМА =====
         const themeBtn = document.getElementById('themeBtn');
