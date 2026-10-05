@@ -68,7 +68,7 @@
             color: var(--text);
             font-family: system-ui, -apple-system, sans-serif;
             min-height: 100vh;
-            min-height: 100dvh; /* Для Android с учётом адресной строки */
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
@@ -175,7 +175,6 @@
             gap: 24px;
             width: 100%;
             padding: 24px;
-            /* Минимальная высота, чтобы сайт растянулся на экран */
             min-height: 60vh;
         }
 
@@ -540,19 +539,17 @@
         function fitToScreen() {
             const wrap = document.getElementById('desktopWrap');
             const scaler = wrap.parentElement;
-            const DESIGN_WIDTH = 1400;
+            const DESIGN_WIDTH = 1100; // ← уменьшено для более крупного масштаба на Android
             const screenWidth = window.innerWidth;
             let scale = screenWidth / DESIGN_WIDTH;
             if (scale > 1) scale = 1;
 
             wrap.style.transform = `scale(${scale})`;
 
-            // Компенсация высоты, чтобы родитель занимал правильную высоту
-            // (transform не влияет на поток документа)
+            // Компенсация высоты
             const realHeight = wrap.scrollHeight;
             scaler.style.height = (realHeight * scale) + 'px';
 
-            // Растягиваем body, чтобы подвал всегда был внизу
             document.body.style.minHeight = '100vh';
         }
 
@@ -562,7 +559,6 @@
             setTimeout(fitToScreen, 200);
         });
 
-        // Вызываем несколько раз с задержкой, чтобы поймать момент загрузки картинок
         fitToScreen();
         setTimeout(fitToScreen, 100);
         setTimeout(fitToScreen, 500);
