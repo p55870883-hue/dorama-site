@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0e14">
+    <title>Смотреть — Дорамы от Дианы</title>
+    <link rel="icon" href="images/Log.png" type="image/png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0b0e14;
+            --bg-card: #151b24;
+            --text: #f0f2f5;
+            --text-muted: #8892a8;
+            --border: #2a313f;
+
+            /* Жёлто-зелёная палитра */
+            --yellow: #f1c40f;
+            --yellow-hover: #f9d849;
+            --green: #2ecc71;
+            --green-hover: #3ddc84;
+            --green-dark: #1d4a2e;
+            --glow-yellow: rgba(241, 196, 15, 0.5);
+            --glow-green: rgba(46, 204, 113, 0.6);
+        }
+
+        [data-theme="light"] {
+            --bg: #e8f4f8;
+            --bg-card: #ffffff;
+            --text: #1a2a3a;
+            --text-muted: #5a7a8a;
+            --border: #90c4d4;
+
+            --yellow: #e6a800;
+            --yellow-hover: #ffbe00;
+            --green: #1d7a3e;
+            --green-hover: #2ea050;
+            --green-dark: #1d4a2e;
+            --glow-yellow: rgba(230, 168, 0, 0.5);
+            --glow-green: rgba(29, 122, 62, 0.5);
+        }
+
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, sans-serif;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        body { display: flex; flex-direction: column; }
+
+        .zoom-wrap {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .desktop-wrap {
+            width: 1300px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: 100dvh;
+            transform-origin: top left;
+        }
+
+        /* ===== ХЕДЕР ===== */
+        .watch-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border-top: 5px solid var(--yellow);
+            border-bottom: 3px solid var(--green);
+            box-shadow:
+                0 0 25px var(--glow-yellow),
+                0 0 15px var(--glow-green);
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            color: var(--yellow);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 12px 26px;
+            background: #000;
+            border: 4px solid var(--yellow);
+            border-radius: 12px;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            background: var(--yellow);
+            color: #000;
+            box-shadow: 0 0 25px var(--glow-yellow);
+        }
+
+        .watch-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-shadow:
+                -2px -2px 0 var(--yellow),
+                2px -2px 0 var(--yellow),
+                -2px 2px 0 var(--yellow),
+                2px 2px 0 var(--yellow),
+                -2px 0 0 var(--yellow),
+                2px 0 0 var(--yellow),
+                0 -2px 0 var(--yellow),
+                0 2px 0 var(--yellow),
+                0 0 15px var(--glow-green);
+        }
+
+        .watch-episodes-count {
+            color: var(--yellow);
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+        .watch-main {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ===== ПЛЕЕР ===== */
+        .player-container {
+            width: 100%;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 4px solid var(--yellow);
+            box-shadow: 0 0 40px var(--glow-yellow);
+            position: relative;
+            aspect-ratio: 16 / 9;
+        }
+
+        .player-container video {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #000;
+            cursor: pointer;
+        }
+
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ПЛЕЕРА ===== */
+        .player-top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.85);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .player-container:hover .player-top-bar,
+        .player-container.paused .player-top-bar {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* В полном экране — только при паузе */
+        .player-container:fullscreen .player-top-bar,
+        .player-container:-webkit-full-screen .player-top-bar {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .player-container:fullscreen.paused .player-top-bar,
+        .player-container:-webkit-full-screen.paused .player-top-bar {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Селекты */
+        .top-select {
+            background: #000;
+            color: var(--green);
+            border: 3px solid var(--yellow);
+            border-radius: 10px;
+            padding: 8px 32px 8px 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 10 10'><path d='M1 3 L5 7 L9 3' fill='none' stroke='%232ecc71' stroke-width='2'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            min-width: 120px;
+            transition: 0.2s;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .top-select:hover,
+        .top-select:focus {
+            border-color: var(--yellow-hover);
+            box-shadow: 0 0 18px var(--glow-yellow);
+        }
+
+        .top-select option {
+            background: #000;
+            color: var(--green);
+            padding: 8px;
+        }
+
+        /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
+        .player-bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background: #000;
+            border-top: 3px solid var(--yellow);
+            padding: 14px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .player-container:hover .player-bottom-bar,
+        .player-container.paused .player-bottom-bar {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .player-container:fullscreen .player-bottom-bar,
+        .player-container:-webkit-full-screen .player-bottom-bar {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .player-container:fullscreen.paused .player-bottom-bar,
+        .player-container:-webkit-full-screen.paused .player-bottom-bar {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Прогресс-бар */
+        .progress-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .progress-bar-wrap {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--green);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--green);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 12px var(--glow-green);
+        }
+
+        .progress-bar-wrap:hover .progress-bar-fill {
+            background: var(--green-hover);
+        }
+
+        /* Кнопки управления */
+        .buttons-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .buttons-left, .buttons-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sbx-btn {
+            background: #000;
+            border: 3px solid var(--yellow);
+            border-radius: 8px;
+            color: var(--green);
+            height: 40px;
+            min-width: 44px;
+            padding: 0 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            flex-shrink: 0;
+            font-family: inherit;
+            font-weight: 700;
+        }
+
+        .sbx-btn:hover {
+            background: var(--green-dark);
+            border-color: var(--green);
+            box-shadow: 0 0 18px var(--glow-green);
+        }
+
+        .sbx-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--green);
+        }
+
+        /* Время */
+        .sbx-time {
+            color: var(--green);
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            padding: 0 10px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 8px var(--glow-green);
+        }
+
+        /* Кнопка качества */
+        .sbx-quality {
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border: 3px solid var(--yellow);
+            border-radius: 8px;
+            background: #000;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            height: 40px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .sbx-quality:hover {
+            background: var(--green-dark);
+            border-color: var(--green);
+            box-shadow: 0 0 18px var(--glow-green);
+        }
+
+        /* Громкость */
+        .volume-wrap {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .volume-slider {
+            width: 0;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: width 0.3s ease;
+            border: 1px solid var(--green);
+        }
+
+        .volume-wrap:hover .volume-slider {
+            width: 70px;
+        }
+
+        .volume-slider-fill {
+            height: 100%;
+            background: var(--green);
+            width: 100%;
+            box-shadow: 0 0 8px var(--glow-green);
+        }
+
+        /* Центральная кнопка Play */
+        .center-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            border-radius: 12px;
+            background: #000;
+            border: 4px solid var(--yellow);
+            color: var(--green);
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            z-index: 5;
+            box-shadow: 0 0 40px var(--glow-yellow);
+        }
+
+        .center-play:hover {
+            background: var(--green-dark);
+            border-color: var(--green);
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 0 50px var(--glow-green);
+        }
+
+        .center-play.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .center-play svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--green);
+            margin-left: 4px;
+        }
+
+        /* Меню настроек */
+        .settings-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 16px;
+            background: #000;
+            border: 3px solid var(--yellow);
+            border-radius: 10px;
+            padding: 6px 0;
+            min-width: 180px;
+            box-shadow: 0 0 25px var(--glow-yellow);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+            z-index: 30;
+        }
+
+        .settings-menu.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .settings-item {
+            padding: 10px 16px;
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.15s;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .settings-item:hover {
+            background: var(--green-dark);
+        }
+
+        .settings-item.active {
+            color: #000;
+            background: var(--green);
+        }
+
+        /* ===== ИНФО ===== */
+        .info-block {
+            background: var(--bg-card);
+            border: 4px solid var(--yellow);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            gap: 24px;
+            box-shadow: 0 0 25px var(--glow-yellow);
+        }
+
+        .info-poster {
+            width: 200px;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: 12px;
+            flex-shrink: 0;
+            background: #1a212b;
+            border: 4px solid var(--green);
+            box-shadow: 0 0 20px var(--glow-green);
+        }
+
+        .info-text { flex: 1; min-width: 0; }
+
+        .info-name {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--green);
+            margin-bottom: 12px;
+            text-shadow:
+                -2px -2px 0 var(--yellow),
+                2px -2px 0 var(--yellow),
+                -2px 2px 0 var(--yellow),
+                2px 2px 0 var(--yellow),
+                -2px 0 0 var(--yellow),
+                2px 0 0 var(--yellow),
+                0 -2px 0 var(--yellow),
+                0 2px 0 var(--yellow),
+                0 0 15px var(--glow-green);
+        }
+
+        .info-detail {
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .info-detail strong {
+            color: var(--yellow);
+            margin-right: 8px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .info-plot {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        footer {
+            padding: 24px;
+            background: var(--bg-card);
+            border-top: 3px solid var(--yellow);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 700;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="zoom-wrap" id="zoomWrap">
+        <div class="desktop-wrap" id="desktopWrap">
+
+            <div class="watch-header">
+                <a href="index.html" class="back-btn">← На главную</a>
+                <div class="watch-title" id="watchTitle">Загрузка...</div>
+                <div class="watch-episodes-count" id="watchEpisodesCount">...</div>
+            </div>
+
+            <div class="watch-main">
+
+                <!-- ПЛЕЕР -->
+                <div class="player-container" id="playerContainer">
+                    <video id="videoPlayer" preload="metadata" playsinline>
+                        <source id="videoSource" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+
+                    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+                    <div class="player-top-bar">
+                        <select class="top-select" id="episodeSelect"></select>
+                        <select class="top-select" id="translationSelect">
+                            <option>SOFTOBX</option>
+                            <option>Многоголосый</option>
+                            <option>Двухголосый</option>
+                            <option>Оригинал + субтитры</option>
+                        </select>
+                    </div>
+
+                    <!-- ЦЕНТРАЛЬНАЯ КНОПКА PLAY -->
+                    <button class="center-play" id="centerPlay">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+
+                    <!-- НИЖНЯЯ ПАНЕЛЬ -->
+                    <div class="player-bottom-bar" id="bottomBar">
+
+                        <div class="progress-row">
+                            <div class="progress-bar-wrap" id="progressWrap">
+                                <div class="progress-bar-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+
+                        <div class="buttons-row">
+                            <div class="buttons-left">
+                                <button class="sbx-btn" id="playPauseBtn" title="Play/Pause">
+                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </button>
+                                <button class="sbx-btn" id="rewindBtn" title="Назад 10 сек">
+                                    <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+                                </button>
+                                <button class="sbx-btn" id="forwardBtn" title="Вперёд 10 сек">
+                                    <svg viewBox="0 0 24 24"><path d="M13 6v12l8.5-6L13 6zM4 18l8.5-6L4 6v12z"/></svg>
+                                </button>
+                                <span class="sbx-time" id="timeDisplay">00:00:00</span>
+                            </div>
+                            <div class="buttons-right">
+                                <button class="sbx-btn" id="downloadBtn" title="Скачать">
+                                    <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+                                </button>
+                                <div class="volume-wrap">
+                                    <button class="sbx-btn" id="muteBtn" title="Звук">
+                                        <svg id="volumeIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                    </button>
+                                    <div class="volume-slider" id="volumeSlider">
+                                        <div class="volume-slider-fill" id="volumeFill"></div>
+                                    </div>
+                                </div>
+                                <button class="sbx-quality" id="qualityBtn">720p</button>
+                                <button class="sbx-btn" id="settingsBtn" title="Настройки">
+                                    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                                </button>
+                                <button class="sbx-btn" id="fullscreenBtn" title="Полный экран">
+                                    <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Меню настроек -->
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-item" data-speed="0.5">Скорость <span>0.5x</span></div>
+                            <div class="settings-item" data-speed="0.75">Скорость <span>0.75x</span></div>
+                            <div class="settings-item active" data-speed="1">Скорость <span>1x</span></div>
+                            <div class="settings-item" data-speed="1.25">Скорость <span>1.25x</span></div>
+                            <div class="settings-item" data-speed="1.5">Скорость <span>1.5x</span></div>
+                            <div class="settings-item" data-speed="2">Скорость <span>2x</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ТОЛЬКО ИНФО С ОПИСАНИЕМ (без списка серий) -->
+                <div class="info-block">
+                    <img class="info-poster" id="infoPoster" src="images/DR.jpg" alt="Постер" onerror="this.src='images/Log.png'">
+                    <div class="info-text">
+                        <div class="info-name" id="infoName">Название</div>
+                        <div class="info-detail"><strong>Год:</strong> <span id="infoYear">—</span></div>
+                        <div class="info-detail"><strong>Жанр:</strong> <span id="infoGenre">—</span></div>
+                        <div class="info-detail"><strong>Страна:</strong> <span id="infoCountry">—</span></div>
+                        <div class="info-detail"><strong>Режиссёр:</strong> <span id="infoDirector">—</span></div>
+                        <div class="info-detail"><strong>Перевод:</strong> <span id="infoTranslation">—</span></div>
+                        <div class="info-plot" id="infoPlot">Описание...</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <footer>
+                © 2026 <a href="index.html">Дорамы от Дианы</a> — Все права защищены.
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        // ===== БАЗА ДОРАМ =====
+        const DRAMAS = {
+            drama1: {
+                name: 'Завтра снова на работу!',
+                episodes: 6,
+                poster: 'images/DR.jpg',
+                year: '2024',
+                genre: 'Мелодрама, комедия',
+                country: 'Республика Корея',
+                director: 'Чо Ын-соль',
+                translation: 'Профессиональный многоголосый',
+                plot: 'Увлекательная история о жизни и любви. Кан Си У и Ча Джи Юн — двое совершенно разных людей, чьи судьбы переплетаются в вихре событий. Он — известный архитектор, она — талантливый дизайнер. Смогут ли они преодолеть все преграды на пути к счастью?',
+                video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const dramaId = urlParams.get('drama') || 'drama1';
+        const drama = DRAMAS[dramaId] || DRAMAS.drama1;
+
+        // ===== ЗАПОЛНЕНИЕ =====
+        document.getElementById('watchTitle').textContent = drama.name;
+        document.getElementById('watchEpisodesCount').textContent = drama.episodes + ' серий';
+        document.getElementById('infoName').textContent = drama.name;
+        document.getElementById('infoYear').textContent = drama.year;
+        document.getElementById('infoGenre').textContent = drama.genre;
+        document.getElementById('infoCountry').textContent = drama.country;
+        document.getElementById('infoDirector').textContent = drama.director;
+        document.getElementById('infoTranslation').textContent = drama.translation;
+        document.getElementById('infoPlot').textContent = drama.plot;
+        document.getElementById('infoPoster').src = drama.poster;
+        document.getElementById('videoSource').src = drama.video;
+        document.getElementById('videoPlayer').load();
+
+        // ===== СЕЛЕКТ СЕРИЙ В ПЛЕЕРЕ =====
+        const episodeSelect = document.getElementById('episodeSelect');
+        episodeSelect.innerHTML = '';
+        for (let e = 1; e <= drama.episodes; e++) {
+            const opt = document.createElement('option');
+            opt.value = e;
+            opt.textContent = e + ' серия';
+            episodeSelect.appendChild(opt);
+        }
+        episodeSelect.value = 1;
+
+        episodeSelect.addEventListener('change', () => {
+            console.log('Выбрана серия:', episodeSelect.value);
+            video.currentTime = 0;
+        });
+
+        // ===== МАСШТАБИРОВАНИЕ =====
+        function fitToScreen() {
+            const wrap = document.getElementById('desktopWrap');
+            const zoomWrap = document.getElementById('zoomWrap');
+            const DESIGN_WIDTH = 1300;
+            const screenWidth = window.innerWidth;
+            let scale = screenWidth / DESIGN_WIDTH;
+            if (scale > 1) scale = 1;
+            zoomWrap.style.zoom = scale;
+            if (typeof zoomWrap.style.zoom === 'undefined') {
+                wrap.style.transform = `scale(${scale})`;
+                wrap.style.transformOrigin = 'top left';
+                wrap.style.width = DESIGN_WIDTH + 'px';
+                const realHeight = wrap.scrollHeight;
+                zoomWrap.style.height = (realHeight * scale) + 'px';
+            }
+        }
+        window.addEventListener('resize', fitToScreen);
+        window.addEventListener('load', fitToScreen);
+        window.addEventListener('orientationchange', () => setTimeout(fitToScreen, 200));
+        fitToScreen();
+        setTimeout(fitToScreen, 100);
+        setTimeout(fitToScreen, 500);
+        setTimeout(fitToScreen, 1500);
+
+        // ===== ПЛЕЕР =====
+        const video = document.getElementById('videoPlayer');
+        const playerContainer = document.getElementById('playerContainer');
+        const centerPlay = document.getElementById('centerPlay');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const progressWrap = document.getElementById('progressWrap');
+        const progressFill = document.getElementById('progressFill');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeFill = document.getElementById('volumeFill');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsMenu = document.getElementById('settingsMenu');
+        const qualityBtn = document.getElementById('qualityBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00:00';
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+        }
+
+        function togglePlay() {
+            if (video.paused) video.play();
+            else video.pause();
+        }
+
+        playPauseBtn.addEventListener('click', togglePlay);
+        centerPlay.addEventListener('click', togglePlay);
+        video.addEventListener('click', togglePlay);
+
+        const iconPlay = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        const iconPause = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+        video.addEventListener('play', () => {
+            playPauseBtn.innerHTML = iconPause;
+            centerPlay.classList.add('hidden');
+            playerContainer.classList.remove('paused');
+        });
+
+        video.addEventListener('pause', () => {
+            playPauseBtn.innerHTML = iconPlay;
+            centerPlay.classList.remove('hidden');
+            playerContainer.classList.add('paused');
+        });
+
+        video.addEventListener('loadedmetadata', () => {
+            timeDisplay.textContent = formatTime(video.currentTime);
+        });
+
+        video.addEventListener('timeupdate', () => {
+            const percent = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = percent + '%';
+            timeDisplay.textContent = formatTime(video.currentTime);
+        });
+
+        progressWrap.addEventListener('click', (e) => {
+            const rect = progressWrap.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            video.currentTime = percent * video.duration;
+        });
+
+        rewindBtn.addEventListener('click', () => {
+            video.currentTime = Math.max(0, video.currentTime - 10);
+        });
+        forwardBtn.addEventListener('click', () => {
+            video.currentTime = Math.min(video.duration, video.currentTime + 10);
+        });
+
+        // Звук
+        const iconVolume = '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
+        const iconMute = '<svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
+
+        muteBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+            muteBtn.innerHTML = video.muted ? iconMute : iconVolume;
+        });
+
+        volumeSlider.addEventListener('click', (e) => {
+            const rect = volumeSlider.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            video.volume = Math.max(0, Math.min(1, percent));
+            volumeFill.style.width = (percent * 100) + '%';
+            video.muted = percent === 0;
+            muteBtn.innerHTML = video.muted ? iconMute : iconVolume;
+        });
+
+        // Полный экран
+        function enterFullscreen() {
+            if (playerContainer.requestFullscreen) playerContainer.requestFullscreen();
+            else if (playerContainer.webkitRequestFullscreen) playerContainer.webkitRequestFullscreen();
+            else if (playerContainer.msRequestFullscreen) playerContainer.msRequestFullscreen();
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+        }
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                enterFullscreen();
+            } else {
+                exitFullscreen();
+            }
+        });
+
+        // Настройки
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!settingsMenu.contains(e.target) && e.target !== settingsBtn) {
+                settingsMenu.classList.remove('show');
+            }
+        });
+
+        settingsMenu.querySelectorAll('.settings-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const speed = parseFloat(item.dataset.speed);
+                video.playbackRate = speed;
+                settingsMenu.querySelectorAll('.settings-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Качество
+        qualityBtn.addEventListener('click', () => {
+            const qualities = ['360p', '480p', '720p', '1080p'];
+            const current = qualityBtn.textContent;
+            const idx = qualities.indexOf(current);
+            const next = qualities[(idx + 1) % qualities.length];
+            qualityBtn.textContent = next;
+        });
+
+        // Скачать
+        downloadBtn.addEventListener('click', () => {
+            const a = document.createElement('a');
+            a.href = video.currentSrc || video.src;
+            a.download = drama.name + ' - серия ' + episodeSelect.value + '.mp4';
+            a.click();
+        });
+
+        // Изначально на паузе — панели видны
+        playerContainer.classList.add('paused');
+    </script>
+</body>
+</html>
