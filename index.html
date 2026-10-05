@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дорамы от Дианы</title>
+    <link rel="icon" href="images/Log.png" type="image/png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0b0e14;
+            --bg-card: #151b24;
+            --text: #f0f2f5;
+            --text-muted: #8892a8;
+            --border: #2a313f;
+            --accent: #f1c40f;
+        }
+
+        [data-theme="light"] {
+            --bg: #e8f4f8;
+            --bg-card: #ffffff;
+            --text: #1a2a3a;
+            --text-muted: #5a7a8a;
+            --border: #90c4d4;
+            --accent: #00bcd4;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ===== ШАПКА С КАРТИНКОЙ ===== */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 45vh;
+            min-height: 280px;
+            overflow: hidden;
+        }
+
+        .hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.3) 0%,
+                rgba(0, 0, 0, 0.1) 40%,
+                rgba(11, 14, 20, 0.95) 100%
+            );
+        }
+
+        .hero-content {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.5px;
+        }
+
+        .hero-title span {
+            color: var(--accent);
+        }
+
+        .theme-btn {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--accent);
+            color: #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
+            background: rgba(241, 196, 15, 0.2);
+        }
+
+        /* ===== ПОИСК ===== */
+        .search-section {
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-wrapper {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 14px 130px 14px 24px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            color: var(--text);
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-wrapper button {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent);
+            color: #0b0e14;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .search-wrapper button:hover {
+            opacity: 0.85;
+        }
+
+        /* ===== СЕТКА ДОРАМ ===== */
+        main {
+            flex: 1;
+            padding: 0 24px 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+        }
+
+        .card img {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            display: block;
+            background: #1a212b;
+        }
+
+        .card .title {
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ===== ЗАГЛУШКА ===== */
+        .placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .placeholder h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .placeholder p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        footer {
+            padding: 24px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .hero { height: 35vh; min-height: 220px; }
+            .hero-title { font-size: 22px; }
+            .theme-btn { width: 40px; height: 40px; font-size: 17px; }
+            .hero-content { bottom: 16px; left: 16px; right: 16px; }
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 16px;
+            }
+            .search-wrapper input {
+                padding: 12px 110px 12px 18px;
+                font-size: 14px;
+            }
+            .search-wrapper button {
+                padding: 8px 18px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ШАПКА С КАРТИНКОЙ -->
+    <div class="hero">
+        <img src="images/wLUEUAnoC6Y.jpg" alt="Дорамы от Дианы" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Дорамы <span>от Дианы</span></h1>
+            <button class="theme-btn" id="themeBtn" title="Переключить тему">🌙</button>
+        </div>
+    </div>
+
+    <!-- ПОИСК -->
+    <div class="search-section">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Поиск дорам..." />
+            <button id="searchBtn">Найти</button>
+        </div>
+    </div>
+
+    <!-- СЕТКА ДОРАМ (пока заглушка) -->
+    <main>
+        <div class="grid" id="grid">
+            <div class="placeholder" style="grid-column: 1 / -1;">
+                <h2>🚧 Сайт в разработке</h2>
+                <p>Здесь скоро появятся дорамы.<br>Карточки будут подгружаться из папки <strong>images/</strong>.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ПОДВАЛ -->
+    <footer>
+        © 2026 <a href="index.html">Дорамы от Дианы</a> — Все права защищены.
+    </footer>
+
+    <script>
+        // ===== ТЕМА =====
+        const themeBtn = document.getElementById('themeBtn');
+        let theme = localStorage.getItem('theme') || 'dark';
+
+        function applyTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            theme = t;
+            themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            applyTheme(theme === 'dark' ? 'light' : 'dark');
+        });
+
+        applyTheme(theme);
+
+        // ===== ЗАГЛУШКА ПОИСКА =====
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            alert('Поиск пока не работает — сайт в разработке');
+        });
+    </script>
+</body>
+</html>
