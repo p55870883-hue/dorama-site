@@ -72,9 +72,7 @@
             flex-direction: column;
         }
 
-        /* ===== ОБЁРТКА ДЛЯ МАСШТАБИРОВАНИЯ ===== */
-        /* Используем zoom — он реально меняет размер layout,
-           а не только визуально, как transform: scale() */
+        /* ===== ОБЁРТКА ДЛЯ ZOOM ===== */
         .zoom-wrap {
             width: 100%;
             display: flex;
@@ -83,7 +81,7 @@
             min-height: 100dvh;
         }
 
-        /* ===== ВНУТРЕННИЙ КОНТЕЙНЕР (виртуальный 1300px) ===== */
+        /* ===== ВНУТРЕННИЙ КОНТЕЙНЕР 1300px ===== */
         .desktop-wrap {
             width: 1300px;
             flex-shrink: 0;
@@ -309,8 +307,6 @@
             border-radius: 16px;
             padding: 20px 16px;
             height: fit-content;
-            position: sticky;
-            top: 20px;
             box-shadow: 0 0 30px rgba(255, 42, 42, 0.15);
         }
 
@@ -329,20 +325,11 @@
                 0 0 20px var(--cat-glow);
         }
 
+        /* ===== КАТЕГОРИИ — ВЕРТИКАЛЬНОЙ ПОЛОСОЙ БЕЗ ПРОКРУТКИ ===== */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
-            gap: 3px;
-            max-height: 72vh;
-            overflow-y: auto;
-            padding-right: 6px;
-        }
-
-        .sidebar-nav::-webkit-scrollbar { width: 5px; }
-        .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-nav::-webkit-scrollbar-thumb {
-            background: var(--cat-border);
-            border-radius: 10px;
+            gap: 4px;
         }
 
         .sidebar-item {
@@ -538,8 +525,6 @@
 
     <script>
         // ===== МАСШТАБИРОВАНИЕ ЧЕРЕЗ CSS ZOOM =====
-        // zoom реально уменьшает layout, а не только визуально (как transform: scale)
-        // Это значит, что горизонтальной прокрутки не будет
         function fitToScreen() {
             const wrap = document.getElementById('desktopWrap');
             const zoomWrap = document.getElementById('zoomWrap');
@@ -548,10 +533,9 @@
             let scale = screenWidth / DESIGN_WIDTH;
             if (scale > 1) scale = 1;
 
-            // Применяем zoom ко всему сайту
             zoomWrap.style.zoom = scale;
 
-            // Для Firefox, где zoom не поддерживается — fallback через transform
+            // Fallback для Firefox
             if (typeof zoomWrap.style.zoom === 'undefined') {
                 wrap.style.transform = `scale(${scale})`;
                 wrap.style.transformOrigin = 'top left';
