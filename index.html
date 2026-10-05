@@ -459,61 +459,67 @@
             transform: scale(1.02);
         }
 
-        /* ===== САЙДБАР — STICKY + ВНУТРЕННЯЯ ПРОКРУТКА ===== */
+        /* ===== САЙДБАР — РАЗВЁРНУТОЕ МЕНЮ + ВНУТРЕННЯЯ ПРОКРУТКА ===== */
         .sidebar {
             background: var(--bg-sidebar);
             border: 2px solid var(--cat-border);
             border-radius: 16px;
-            padding: 26px 22px;
             box-shadow: 0 0 30px rgba(255, 42, 42, 0.15);
-            position: sticky;
-            top: 24px;
+            /* Высота = экран минус отступы, чтобы сайдбар не разрастался */
             max-height: calc(100vh - 48px);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            /* Sticky: прилипает при прокрутке страницы */
+            position: sticky;
+            top: 24px;
         }
 
+        /* Заголовок остаётся фиксированным внутри сайдбара */
         .sidebar-title {
             font-size: 34px;
             font-weight: 800;
             color: var(--cat-color);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 22px;
-            padding-bottom: 18px;
+            padding: 26px 22px 18px;
             border-bottom: 2px solid var(--cat-border);
             text-align: center;
             text-shadow:
                 0 0 10px var(--cat-glow-blue),
                 0 0 20px var(--cat-glow);
             flex-shrink: 0;
+            background: var(--bg-sidebar);
         }
 
-        /* Прокручиваемый список категорий */
+        /* Список категорий — развёрнутое меню с прокруткой */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
             gap: 9px;
+            padding: 16px 22px 22px;
             overflow-y: auto;
-            padding-right: 8px;
+            overflow-x: hidden;
             flex: 1;
             min-height: 0;
         }
 
         /* Стилизация скроллбара */
         .sidebar-nav::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
 
         .sidebar-nav::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
+            background: #000;
             border-radius: 4px;
+            margin: 4px 0;
         }
 
         .sidebar-nav::-webkit-scrollbar-thumb {
             background: var(--cat-border);
             border-radius: 4px;
-            box-shadow: 0 0 8px var(--cat-glow);
+            box-shadow: 0 0 10px var(--cat-glow);
+            border: 2px solid #000;
         }
 
         .sidebar-nav::-webkit-scrollbar-thumb:hover {
@@ -523,7 +529,7 @@
         /* Firefox */
         .sidebar-nav {
             scrollbar-width: thin;
-            scrollbar-color: var(--cat-border) rgba(0, 0, 0, 0.3);
+            scrollbar-color: var(--cat-border) #000;
         }
 
         .sidebar-item {
@@ -678,7 +684,7 @@
 
                 </div>
 
-                <!-- САЙДБАР С ПРОКРУТКОЙ -->
+                <!-- САЙДБАР: развёрнутое меню с внутренней прокруткой -->
                 <aside class="sidebar">
                     <div class="sidebar-title">Категории</div>
                     <nav class="sidebar-nav" id="sidebarNav">
@@ -765,7 +771,6 @@
         let currentSearch = '';
         let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-        // ===== СОХРАНЕНИЕ =====
         function saveFavorites() {
             localStorage.setItem('favorites', JSON.stringify(favorites));
             updateFavCount();
@@ -775,7 +780,6 @@
             document.getElementById('favCount').textContent = favorites.length;
         }
 
-        // ===== ФИЛЬТРАЦИЯ =====
         function getFilteredMovies() {
             let result = [...MOVIES];
 
@@ -795,7 +799,6 @@
             return result;
         }
 
-        // ===== РЕНДЕР =====
         function renderGrid() {
             const grid = document.getElementById('grid');
             const filtered = getFilteredMovies();
@@ -836,13 +839,11 @@
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    const id = btn.dataset.favId;
-                    toggleFavorite(id);
+                    toggleFavorite(btn.dataset.favId);
                 });
             });
         }
 
-        // ===== ИЗБРАННОЕ =====
         function toggleFavorite(id) {
             const idx = favorites.indexOf(id);
             if (idx > -1) {
@@ -869,13 +870,10 @@
                 document.getElementById('favoritesToggle').classList.remove('active');
                 updateResetButton();
                 renderGrid();
-
-                // Прокручиваем список к активной категории
-                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             });
         });
 
-        // ===== ИЗБРАННОЕ (тулбар) =====
+        // ===== ИЗБРАННОЕ =====
         document.getElementById('favoritesToggle').addEventListener('click', function() {
             showFavoritesOnly = !showFavoritesOnly;
             this.classList.toggle('active', showFavoritesOnly);
@@ -948,7 +946,6 @@
             }
         });
 
-        // ===== TOAST =====
         function showToast(msg) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
