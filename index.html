@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Дорамы от Дианы</title>
     <link rel="icon" href="images/Log.png" type="image/png">
     <style>
@@ -56,14 +56,32 @@
             --cat-glow-green: rgba(46, 204, 113, 0.6);
         }
 
-        body {
+        html, body {
             background: var(--bg);
             color: var(--text);
             font-family: system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            width: 100%;
             min-height: 100vh;
+        }
+
+        /* ===== КОНТЕЙНЕР ДЛЯ МАСШТАБИРОВАНИЯ ===== */
+        /* Все стили рассчитаны на десктопную ширину 1400px,
+           а потом уменьшаются через transform: scale() */
+        .viewport-scaler {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .desktop-wrap {
+            width: 1400px;
+            flex-shrink: 0;
+            transform-origin: top center;
             display: flex;
             flex-direction: column;
-            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
         }
 
         /* ===== ШАПКА ===== */
@@ -144,7 +162,6 @@
             display: grid;
             grid-template-columns: 1fr 320px;
             gap: 24px;
-            max-width: 1400px;
             width: 100%;
             margin: 0 auto;
             padding: 24px;
@@ -185,7 +202,6 @@
         .search-wrapper input:focus {
             border-color: #ff3333;
             box-shadow: 0 0 40px rgba(255, 0, 0, 0.25);
-            transform: scale(1.01);
         }
 
         .search-wrapper .search-btn {
@@ -216,7 +232,6 @@
 
         .search-wrapper .search-btn:hover {
             background: #cc0000;
-            transform: translateY(-50%) scale(0.97);
         }
 
         .search-wrapper .search-btn.animating {
@@ -228,7 +243,6 @@
         .search-wrapper .search-btn.returning {
             right: 8px;
             background: #ff0000;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
         }
 
         /* ===== СЕТКА ===== */
@@ -338,7 +352,6 @@
             background: var(--cat-bg-hover);
             border-color: var(--cat-border-hover);
             color: var(--cat-color-hover);
-            transform: translateX(4px);
             box-shadow: 0 0 18px var(--cat-glow);
         }
 
@@ -350,12 +363,6 @@
                 0 0 20px var(--cat-glow-green),
                 0 0 35px var(--cat-glow);
             font-weight: 800;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000,
-                0 0 10px var(--cat-glow-green);
         }
 
         .sidebar-divider {
@@ -364,7 +371,6 @@
             opacity: 0.5;
             margin: 8px 4px;
             border-radius: 2px;
-            box-shadow: 0 0 8px var(--cat-glow);
         }
 
         /* ===== ЗАГЛУШКА ===== */
@@ -400,108 +406,139 @@
             color: var(--accent);
             text-decoration: none;
         }
-
-        /* ===== НЕТ МЕДИА-ЗАПРОСОВ — сайт везде выглядит одинаково ===== */
     </style>
 </head>
 <body>
 
-    <!-- ШАПКА -->
-    <div class="hero">
-        <img src="images/wLUEUAnoC6Y.jpg" alt="Дорамы от Дианы" />
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1 class="hero-title">Дорамы <span>от Дианы</span></h1>
-            <button class="theme-btn" id="themeBtn" title="Переключить тему">🌙</button>
-        </div>
-    </div>
+    <!-- КОНТЕЙНЕР ДЛЯ МАСШТАБИРОВАНИЯ -->
+    <div class="viewport-scaler">
+        <div class="desktop-wrap" id="desktopWrap">
 
-    <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
-    <div class="layout">
-
-        <div class="content">
-
-            <div class="search-section">
-                <div class="search-wrapper">
-                    <input type="text" id="searchInput" placeholder="Поиск..." autocomplete="off" />
-                    <button class="search-btn" id="searchBtn">Найти</button>
+            <!-- ШАПКА -->
+            <div class="hero">
+                <img src="images/wLUEUAnoC6Y.jpg" alt="Дорамы от Дианы" />
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h1 class="hero-title">Дорамы <span>от Дианы</span></h1>
+                    <button class="theme-btn" id="themeBtn" title="Переключить тему">🌙</button>
                 </div>
             </div>
 
-            <div class="grid" id="grid">
-                <div class="placeholder">
-                    <h2>🚧 Сайт в разработке</h2>
-                    <p>Здесь скоро появятся фильмы и сериалы.<br>Карточки будут подгружаться из папки <strong>images/</strong>.</p>
+            <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
+            <div class="layout">
+
+                <div class="content">
+
+                    <div class="search-section">
+                        <div class="search-wrapper">
+                            <input type="text" id="searchInput" placeholder="Поиск..." autocomplete="off" />
+                            <button class="search-btn" id="searchBtn">Найти</button>
+                        </div>
+                    </div>
+
+                    <div class="grid" id="grid">
+                        <div class="placeholder">
+                            <h2>🚧 Сайт в разработке</h2>
+                            <p>Здесь скоро появятся фильмы и сериалы.<br>Карточки будут подгружаться из папки <strong>images/</strong>.</p>
+                        </div>
+                    </div>
+
                 </div>
+
+                <!-- САЙДБАР -->
+                <aside class="sidebar">
+                    <div class="sidebar-title">Категории</div>
+                    <nav class="sidebar-nav" id="sidebarNav">
+
+                        <a class="sidebar-item active" data-category="all">Все</a>
+
+                        <div class="sidebar-divider"></div>
+
+                        <a class="sidebar-item" data-category="films-2026">Фильмы 2026</a>
+                        <a class="sidebar-item" data-category="best-films-2026">Лучшие фильмы 2026</a>
+                        <a class="sidebar-item" data-category="films-2025">Фильмы 2025</a>
+                        <a class="sidebar-item" data-category="best-films-2025">Лучшие фильмы 2025</a>
+                        <a class="sidebar-item" data-category="films-2024">Фильмы 2024</a>
+                        <a class="sidebar-item" data-category="best-films-2024">Лучшие фильмы 2024</a>
+                        <a class="sidebar-item" data-category="films-2023">Фильмы 2023</a>
+                        <a class="sidebar-item" data-category="anime">Аниме</a>
+                        <a class="sidebar-item" data-category="action">Фильмы боевики</a>
+                        <a class="sidebar-item" data-category="biography">Биографические фильмы</a>
+                        <a class="sidebar-item" data-category="war">Военные фильмы</a>
+                        <a class="sidebar-item" data-category="drama">Драмы</a>
+                        <a class="sidebar-item" data-category="detective">Детективы</a>
+                        <a class="sidebar-item" data-category="documentary">Документальные фильмы</a>
+                        <a class="sidebar-item" data-category="historical">Исторические фильмы</a>
+                        <a class="sidebar-item" data-category="comedy">Комедии</a>
+                        <a class="sidebar-item" data-category="crime">Криминальные фильмы</a>
+                        <a class="sidebar-item" data-category="ru-melodrama">Русские мелодрамы</a>
+                        <a class="sidebar-item" data-category="melodrama">Мелодрамы</a>
+                        <a class="sidebar-item" data-category="cartoon">Мультфильмы</a>
+                        <a class="sidebar-item" data-category="cartoon-series">Мультсериалы</a>
+                        <a class="sidebar-item" data-category="adventure">Приключения</a>
+                        <a class="sidebar-item" data-category="thriller">Триллеры</a>
+                        <a class="sidebar-item" data-category="horror">Фильмы ужасов</a>
+                        <a class="sidebar-item" data-category="sci-fi">Фантастические фильмы</a>
+                        <a class="sidebar-item" data-category="fantasy">Фэнтези фильмы</a>
+                        <a class="sidebar-item" data-category="ru-films">Русские фильмы</a>
+                        <a class="sidebar-item" data-category="best-ru-films">Лучшие Русские фильмы</a>
+
+                        <div class="sidebar-divider"></div>
+
+                        <a class="sidebar-item" data-category="turkish-series">Турецкие сериалы на русском</a>
+                        <a class="sidebar-item" data-category="series">Сериалы</a>
+                        <a class="sidebar-item" data-category="series-2026">Сериалы 2026</a>
+                        <a class="sidebar-item" data-category="series-2025">Сериалы 2025</a>
+                        <a class="sidebar-item" data-category="series-2024">Сериалы 2024</a>
+                        <a class="sidebar-item" data-category="best-series">Лучшие сериалы</a>
+                        <a class="sidebar-item" data-category="dorama">Дорамы</a>
+                        <a class="sidebar-item" data-category="films-new">Фильмы Новинки</a>
+                        <a class="sidebar-item" data-category="best-films">Лучшие фильмы</a>
+                        <a class="sidebar-item" data-category="ru-series">Русские сериалы</a>
+                        <a class="sidebar-item" data-category="ru-series-2026">Русские сериалы 2026</a>
+                        <a class="sidebar-item" data-category="ru-series-2025">Русские сериалы 2025</a>
+                        <a class="sidebar-item" data-category="best-ru-series">Лучшие Русские сериалы</a>
+
+                    </nav>
+                </aside>
+
             </div>
 
+            <!-- ПОДВАЛ -->
+            <footer>
+                © 2026 <a href="index.html">Дорамы от Дианы</a> — Все права защищены.
+            </footer>
+
         </div>
-
-        <!-- САЙДБАР -->
-        <aside class="sidebar">
-            <div class="sidebar-title">Категории</div>
-            <nav class="sidebar-nav" id="sidebarNav">
-
-                <a class="sidebar-item active" data-category="all">Все</a>
-
-                <div class="sidebar-divider"></div>
-
-                <a class="sidebar-item" data-category="films-2026">Фильмы 2026</a>
-                <a class="sidebar-item" data-category="best-films-2026">Лучшие фильмы 2026</a>
-                <a class="sidebar-item" data-category="films-2025">Фильмы 2025</a>
-                <a class="sidebar-item" data-category="best-films-2025">Лучшие фильмы 2025</a>
-                <a class="sidebar-item" data-category="films-2024">Фильмы 2024</a>
-                <a class="sidebar-item" data-category="best-films-2024">Лучшие фильмы 2024</a>
-                <a class="sidebar-item" data-category="films-2023">Фильмы 2023</a>
-                <a class="sidebar-item" data-category="anime">Аниме</a>
-                <a class="sidebar-item" data-category="action">Фильмы боевики</a>
-                <a class="sidebar-item" data-category="biography">Биографические фильмы</a>
-                <a class="sidebar-item" data-category="war">Военные фильмы</a>
-                <a class="sidebar-item" data-category="drama">Драмы</a>
-                <a class="sidebar-item" data-category="detective">Детективы</a>
-                <a class="sidebar-item" data-category="documentary">Документальные фильмы</a>
-                <a class="sidebar-item" data-category="historical">Исторические фильмы</a>
-                <a class="sidebar-item" data-category="comedy">Комедии</a>
-                <a class="sidebar-item" data-category="crime">Криминальные фильмы</a>
-                <a class="sidebar-item" data-category="ru-melodrama">Русские мелодрамы</a>
-                <a class="sidebar-item" data-category="melodrama">Мелодрамы</a>
-                <a class="sidebar-item" data-category="cartoon">Мультфильмы</a>
-                <a class="sidebar-item" data-category="cartoon-series">Мультсериалы</a>
-                <a class="sidebar-item" data-category="adventure">Приключения</a>
-                <a class="sidebar-item" data-category="thriller">Триллеры</a>
-                <a class="sidebar-item" data-category="horror">Фильмы ужасов</a>
-                <a class="sidebar-item" data-category="sci-fi">Фантастические фильмы</a>
-                <a class="sidebar-item" data-category="fantasy">Фэнтези фильмы</a>
-                <a class="sidebar-item" data-category="ru-films">Русские фильмы</a>
-                <a class="sidebar-item" data-category="best-ru-films">Лучшие Русские фильмы</a>
-
-                <div class="sidebar-divider"></div>
-
-                <a class="sidebar-item" data-category="turkish-series">Турецкие сериалы на русском</a>
-                <a class="sidebar-item" data-category="series">Сериалы</a>
-                <a class="sidebar-item" data-category="series-2026">Сериалы 2026</a>
-                <a class="sidebar-item" data-category="series-2025">Сериалы 2025</a>
-                <a class="sidebar-item" data-category="series-2024">Сериалы 2024</a>
-                <a class="sidebar-item" data-category="best-series">Лучшие сериалы</a>
-                <a class="sidebar-item" data-category="dorama">Дорамы</a>
-                <a class="sidebar-item" data-category="films-new">Фильмы Новинки</a>
-                <a class="sidebar-item" data-category="best-films">Лучшие фильмы</a>
-                <a class="sidebar-item" data-category="ru-series">Русские сериалы</a>
-                <a class="sidebar-item" data-category="ru-series-2026">Русские сериалы 2026</a>
-                <a class="sidebar-item" data-category="ru-series-2025">Русские сериалы 2025</a>
-                <a class="sidebar-item" data-category="best-ru-series">Лучшие Русские сериалы</a>
-
-            </nav>
-        </aside>
-
     </div>
-
-    <!-- ПОДВАЛ -->
-    <footer>
-        © 2026 <a href="index.html">Дорамы от Дианы</a> — Все права защищены.
-    </footer>
 
     <script>
+        // ===== МАСШТАБИРОВАНИЕ ПОД ЭКРАН =====
+        // Сайт свёрстан под 1400px. Если экран меньше — уменьшаем через transform: scale()
+        function fitToScreen() {
+            const wrap = document.getElementById('desktopWrap');
+            const DESIGN_WIDTH = 1400;
+            const screenWidth = window.innerWidth;
+            const scale = screenWidth / DESIGN_WIDTH;
+
+            if (scale < 1) {
+                wrap.style.transform = `scale(${scale})`;
+                // Компенсируем отступ снизу, так как transform не влияет на поток
+                wrap.style.marginBottom = `calc(-${(1 - scale) * 100}%)`;
+                // Или можно через height:
+                const realHeight = wrap.scrollHeight;
+                wrap.parentElement.style.height = (realHeight * scale) + 'px';
+            } else {
+                wrap.style.transform = 'scale(1)';
+                wrap.style.marginBottom = '0';
+                wrap.parentElement.style.height = 'auto';
+            }
+        }
+
+        window.addEventListener('resize', fitToScreen);
+        window.addEventListener('load', fitToScreen);
+        fitToScreen();
+
         // ===== ТЕМА =====
         const themeBtn = document.getElementById('themeBtn');
         let theme = localStorage.getItem('theme') || 'dark';
