@@ -31,7 +31,6 @@
             --cat-glow: rgba(255, 42, 42, 0.5);
             --cat-glow-blue: rgba(77, 159, 255, 0.5);
             --cat-glow-green: rgba(46, 204, 113, 0.6);
-            --cat-wrap-bg: #f1c40f;
         }
 
         [data-theme="light"] {
@@ -56,7 +55,6 @@
             --cat-glow: rgba(230, 0, 0, 0.5);
             --cat-glow-blue: rgba(77, 159, 255, 0.5);
             --cat-glow-green: rgba(46, 204, 113, 0.6);
-            --cat-wrap-bg: #e6a800;
         }
 
         html, body {
@@ -327,14 +325,11 @@
                 0 0 20px var(--cat-glow);
         }
 
-        /* ===== КАТЕГОРИИ — С ЖЁЛТОЙ ЗАЛИВКОЙ И ТОЛСТОЙ КРАСНОЙ ОБВОДКОЙ ===== */
+        /* ===== КАТЕГОРИИ — БЕЗ ЖЁЛТОЙ ЗАЛИВКИ, ЖИРНАЯ КРАСНАЯ ОБВОДКА ===== */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
             gap: 9px;
-            padding: 12px;
-            background: var(--cat-wrap-bg);
-            border-radius: 14px;
         }
 
         .sidebar-item {
@@ -346,7 +341,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s ease;
-            border: 4px solid var(--cat-border);   /* ← было 2px, стало 4px */
+            border: 4px solid var(--cat-border);
             background: var(--cat-bg);
             color: var(--cat-color);
             line-height: 1.35;
