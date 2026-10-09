@@ -148,7 +148,7 @@
             gap: 24px;
         }
 
-        /* ===== ПЛЕЕР (IFRAME) ===== */
+        /* ===== ПЛЕЕР ===== */
         .player-container {
             width: 100%;
             background: #000;
@@ -168,6 +168,7 @@
             background: #000;
         }
 
+        /* Плеер в полноэкранном режиме браузера */
         .player-container:fullscreen,
         .player-container:-webkit-full-screen {
             width: 100vw;
@@ -181,6 +182,55 @@
         .player-container:-webkit-full-screen iframe {
             width: 100%;
             height: 100%;
+        }
+
+        /* ===== ПАНЕЛЬ С КНОПКОЙ ПОВОРОТА ===== */
+        .rotate-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .rotate-btn {
+            background: #000;
+            border: 4px solid var(--yellow);
+            border-radius: 12px;
+            color: var(--yellow);
+            padding: 14px 28px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+            box-shadow: 0 0 20px var(--glow-yellow);
+        }
+
+        .rotate-btn:hover {
+            background: var(--yellow);
+            color: #000;
+            text-shadow: none;
+            box-shadow: 0 0 35px var(--glow-yellow);
+        }
+
+        .rotate-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Скрываем кнопки разворота на ПК (там и так горизонтально) */
+        @media (min-width: 1024px) and (orientation: landscape) {
+            .rotate-bar {
+                display: none;
+            }
         }
 
         /* ===== ИНФО ===== */
@@ -278,7 +328,6 @@
 
             <div class="watch-main">
 
-                <!-- ПЛЕЕР IFRAME -->
                 <div class="player-container" id="playerContainer">
                     <iframe
                         id="videoPlayer"
@@ -290,9 +339,18 @@
                     ></iframe>
                 </div>
 
-                <!-- ИНФО -->
+                <!-- КНОПКИ ПОВОРОТА ЭКРАНА -->
+                <div class="rotate-bar">
+                    <button class="rotate-btn" id="rotateLandscape">
+                        📱↔️ Развернуть горизонтально
+                    </button>
+                    <button class="rotate-btn" id="rotatePortrait">
+                        📱↕️ Вернуть вертикально
+                    </button>
+                </div>
+
                 <div class="info-block">
-                    <img class="info-poster" id="infoPoster" src="images/DR.jpg" alt="Постер" onerror="this.src='images/Log.png'">
+                    <img class="info-poster" id="infoPoster" src="images/hfd.jpg" alt="Постер" onerror="this.src='images/Log.png'">
                     <div class="info-text">
                         <div class="info-name" id="infoName">Хитрый койот</div>
                         <div class="info-detail"><strong>Год:</strong> <span id="infoYear">2024</span></div>
@@ -321,7 +379,7 @@
             cartoon1: {
                 name: 'Хитрый койот',
                 episodes: 1,
-                poster: 'images/DR.jpg',
+                poster: 'images/hfd.jpg',
                 year: '2024',
                 genre: 'Мультфильм, комедия',
                 country: 'США',
@@ -351,6 +409,77 @@
         if (drama.iframeSrc) {
             document.getElementById('videoPlayer').src = drama.iframeSrc;
         }
+
+        // ===== КНОПКА ПОВОРОТА ЭКРАНА =====
+        const playerContainer = document.getElementById('playerContainer');
+        const rotateLandscapeBtn = document.getElementById('rotateLandscape');
+        const rotatePortraitBtn = document.getElementById('rotatePortrait');
+
+        // Развернуть горизонтально: fullscreen + попытка блокировки landscape
+        async function rotateToLandscape() {
+            try {
+                // 1. Входим в полноэкранный режим
+                if (playerContainer.requestFullscreen) {
+                    await playerContainer.requestFullscreen();
+                } else if (playerContainer.webkitRequestFullscreen) {
+                    await playerContainer.webkitRequestFullscreen();
+                } else if (playerContainer.msRequestFullscreen) {
+                    await playerContainer.msRequestFullscreen();
+                }
+
+                // 2. Пробуем заблокировать landscape (работает в Chrome Android)
+                if (screen.orientation && screen.orientation.lock) {
+                    try {
+                        await screen.orientation.lock('landscape');
+                        console.log('✅ Ориентация: landscape');
+                    } catch (err) {
+                        console.log('⚠️ Не удалось заблокировать landscape:', err.message);
+                    }
+                }
+            } catch (err) {
+                console.error('Ошибка разворота:', err);
+            }
+        }
+
+        // Вернуть вертикально: выход из fullscreen + сброс ориентации
+        async function rotateToPortrait() {
+            try {
+                // 1. Разблокируем ориентацию
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+
+                // 2. Выходим из fullscreen
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    if (document.exitFullscreen) {
+                        await document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        await document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        await document.msExitFullscreen();
+                    }
+                }
+            } catch (err) {
+                console.error('Ошибка возврата:', err);
+            }
+        }
+
+        rotateLandscapeBtn.addEventListener('click', rotateToLandscape);
+        rotatePortraitBtn.addEventListener('click', rotateToPortrait);
+
+        // При выходе из fullscreen пользователем (кнопка "назад" на Android)
+        // — автоматически разблокируем ориентацию
+        function onFullscreenChange() {
+            const isFullscreen = document.fullscreenElement ||
+                                 document.webkitFullscreenElement ||
+                                 document.msFullscreenElement;
+            if (!isFullscreen && screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+        }
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+        document.addEventListener('msfullscreenchange', onFullscreenChange);
 
         // ===== МАСШТАБИРОВАНИЕ =====
         function fitToScreen() {
