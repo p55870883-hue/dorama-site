@@ -148,7 +148,7 @@
             gap: 24px;
         }
 
-        /* ===== ПЛЕЕР ===== */
+        /* ===== ПЛЕЕР (IFRAME) ===== */
         .player-container {
             width: 100%;
             background: #000;
@@ -160,16 +160,14 @@
             aspect-ratio: 16 / 9;
         }
 
-        .player-container video {
+        .player-container iframe {
             width: 100%;
             height: 100%;
             display: block;
+            border: none;
             background: #000;
-            cursor: pointer;
         }
 
-        /* ===== ПОЛНОЭКРАННЫЙ РЕЖИМ ===== */
-        /* Растягиваем контейнер на весь экран */
         .player-container:fullscreen,
         .player-container:-webkit-full-screen {
             width: 100vw;
@@ -177,336 +175,12 @@
             aspect-ratio: auto;
             border-radius: 0;
             border: none;
-            background: #000;
         }
 
-        .player-container:fullscreen video,
-        .player-container:-webkit-full-screen video {
+        .player-container:fullscreen iframe,
+        .player-container:-webkit-full-screen iframe {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            background: #000;
-        }
-
-        /* На Android — прячем всё, кроме видео */
-        .player-container:fullscreen {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
-        .player-top-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 16px;
-            background: rgba(0, 0, 0, 0.85);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .player-container:hover .player-top-bar,
-        .player-container.paused .player-top-bar {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .player-container:fullscreen .player-top-bar,
-        .player-container:-webkit-full-screen .player-top-bar {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .player-container:fullscreen.paused .player-top-bar,
-        .player-container:-webkit-full-screen.paused .player-top-bar {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .top-select {
-            background: #000;
-            color: var(--green);
-            border: 3px solid var(--yellow);
-            border-radius: 10px;
-            padding: 8px 32px 8px 14px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            outline: none;
-            font-family: inherit;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 10 10'><path d='M1 3 L5 7 L9 3' fill='none' stroke='%232ecc71' stroke-width='2'/></svg>");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            min-width: 120px;
-            transition: 0.2s;
-        }
-
-        .top-select:hover,
-        .top-select:focus {
-            border-color: var(--yellow-hover);
-            box-shadow: 0 0 18px var(--glow-yellow);
-        }
-
-        .top-select option {
-            background: #000;
-            color: var(--green);
-            padding: 8px;
-        }
-
-        /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
-        .player-bottom-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 20;
-            background: #000;
-            border-top: 3px solid var(--yellow);
-            padding: 14px 16px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .player-container:hover .player-bottom-bar,
-        .player-container.paused .player-bottom-bar {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .player-container:fullscreen .player-bottom-bar,
-        .player-container:-webkit-full-screen .player-bottom-bar {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .player-container:fullscreen.paused .player-bottom-bar,
-        .player-container:-webkit-full-screen.paused .player-bottom-bar {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .progress-row {
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-
-        .progress-bar-wrap {
-            flex: 1;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--green);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--green);
-            width: 0%;
-            transition: width 0.1s linear;
-            box-shadow: 0 0 12px var(--glow-green);
-        }
-
-        .progress-bar-wrap:hover .progress-bar-fill {
-            background: var(--green-hover);
-        }
-
-        .buttons-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
-
-        .buttons-left, .buttons-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sbx-btn {
-            background: #000;
-            border: 3px solid var(--yellow);
-            border-radius: 8px;
-            color: var(--green);
-            height: 40px;
-            min-width: 44px;
-            padding: 0 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            flex-shrink: 0;
-            font-family: inherit;
-            font-weight: 700;
-        }
-
-        .sbx-btn:hover {
-            background: var(--green-dark);
-            border-color: var(--green);
-            box-shadow: 0 0 18px var(--glow-green);
-        }
-
-        .sbx-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--green);
-        }
-
-        .sbx-time {
-            color: var(--green);
-            font-size: 15px;
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-            padding: 0 10px;
-            flex-shrink: 0;
-            letter-spacing: 0.5px;
-        }
-
-        .sbx-quality {
-            color: var(--green);
-            font-size: 14px;
-            font-weight: 700;
-            padding: 8px 14px;
-            border: 3px solid var(--yellow);
-            border-radius: 8px;
-            background: #000;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-            height: 40px;
-        }
-
-        .sbx-quality:hover {
-            background: var(--green-dark);
-            border-color: var(--green);
-            box-shadow: 0 0 18px var(--glow-green);
-        }
-
-        .volume-wrap {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .volume-slider {
-            width: 0;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: width 0.3s ease;
-            border: 1px solid var(--green);
-        }
-
-        .volume-wrap:hover .volume-slider {
-            width: 70px;
-        }
-
-        .volume-slider-fill {
-            height: 100%;
-            background: var(--green);
-            width: 100%;
-            box-shadow: 0 0 8px var(--glow-green);
-        }
-
-        .center-play {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90px;
-            height: 90px;
-            border-radius: 12px;
-            background: #000;
-            border: 4px solid var(--yellow);
-            color: var(--green);
-            font-size: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            z-index: 5;
-            box-shadow: 0 0 40px var(--glow-yellow);
-        }
-
-        .center-play:hover {
-            background: var(--green-dark);
-            border-color: var(--green);
-            transform: translate(-50%, -50%) scale(1.05);
-            box-shadow: 0 0 50px var(--glow-green);
-        }
-
-        .center-play.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .center-play svg {
-            width: 40px;
-            height: 40px;
-            fill: var(--green);
-            margin-left: 4px;
-        }
-
-        .settings-menu {
-            position: absolute;
-            bottom: 70px;
-            right: 16px;
-            background: #000;
-            border: 3px solid var(--yellow);
-            border-radius: 10px;
-            padding: 6px 0;
-            min-width: 180px;
-            box-shadow: 0 0 25px var(--glow-yellow);
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.2s;
-            z-index: 30;
-        }
-
-        .settings-menu.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .settings-item {
-            padding: 10px 16px;
-            color: var(--green);
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.15s;
-        }
-
-        .settings-item:hover {
-            background: var(--green-dark);
-        }
-
-        .settings-item.active {
-            color: #000;
-            background: var(--green);
         }
 
         /* ===== ИНФО ===== */
@@ -590,101 +264,45 @@
 </head>
 <body>
 
+    <!-- Скрипт замены доменов Abyss.to -->
+    <script src="https://cdn.jsdelivr.net/gh/hydraxnet/player.html@main/replace-domain.js"></script>
+
     <div class="zoom-wrap" id="zoomWrap">
         <div class="desktop-wrap" id="desktopWrap">
 
             <div class="watch-header">
                 <a href="index.html" class="back-btn">← На главную</a>
-                <div class="watch-title" id="watchTitle">Загрузка...</div>
-                <div class="watch-episodes-count" id="watchEpisodesCount">...</div>
+                <div class="watch-title" id="watchTitle">Хитрый койот</div>
+                <div class="watch-episodes-count" id="watchEpisodesCount">1 серия</div>
             </div>
 
             <div class="watch-main">
 
+                <!-- ПЛЕЕР IFRAME -->
                 <div class="player-container" id="playerContainer">
-                    <video id="videoPlayer" preload="metadata" playsinline webkit-playsinline>
-                        <source id="videoSource" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                        Ваш браузер не поддерживает видео.
-                    </video>
-
-                    <div class="player-top-bar">
-                        <select class="top-select" id="episodeSelect"></select>
-                        <select class="top-select" id="translationSelect">
-                            <option>SOFTOBX</option>
-                            <option>Многоголосый</option>
-                            <option>Двухголосый</option>
-                            <option>Оригинал + субтитры</option>
-                        </select>
-                    </div>
-
-                    <button class="center-play" id="centerPlay">
-                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </button>
-
-                    <div class="player-bottom-bar" id="bottomBar">
-
-                        <div class="progress-row">
-                            <div class="progress-bar-wrap" id="progressWrap">
-                                <div class="progress-bar-fill" id="progressFill"></div>
-                            </div>
-                        </div>
-
-                        <div class="buttons-row">
-                            <div class="buttons-left">
-                                <button class="sbx-btn" id="playPauseBtn" title="Play/Pause">
-                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                </button>
-                                <button class="sbx-btn" id="rewindBtn" title="Назад 10 сек">
-                                    <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
-                                </button>
-                                <button class="sbx-btn" id="forwardBtn" title="Вперёд 10 сек">
-                                    <svg viewBox="0 0 24 24"><path d="M13 6v12l8.5-6L13 6zM4 18l8.5-6L4 6v12z"/></svg>
-                                </button>
-                                <span class="sbx-time" id="timeDisplay">00:00:00</span>
-                            </div>
-                            <div class="buttons-right">
-                                <button class="sbx-btn" id="downloadBtn" title="Скачать">
-                                    <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
-                                </button>
-                                <div class="volume-wrap">
-                                    <button class="sbx-btn" id="muteBtn" title="Звук">
-                                        <svg id="volumeIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                                    </button>
-                                    <div class="volume-slider" id="volumeSlider">
-                                        <div class="volume-slider-fill" id="volumeFill"></div>
-                                    </div>
-                                </div>
-                                <button class="sbx-quality" id="qualityBtn">720p</button>
-                                <button class="sbx-btn" id="settingsBtn" title="Настройки">
-                                    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                                </button>
-                                <button class="sbx-btn" id="fullscreenBtn" title="Полный экран">
-                                    <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="settings-menu" id="settingsMenu">
-                            <div class="settings-item" data-speed="0.5">Скорость <span>0.5x</span></div>
-                            <div class="settings-item" data-speed="0.75">Скорость <span>0.75x</span></div>
-                            <div class="settings-item active" data-speed="1">Скорость <span>1x</span></div>
-                            <div class="settings-item" data-speed="1.25">Скорость <span>1.25x</span></div>
-                            <div class="settings-item" data-speed="1.5">Скорость <span>1.5x</span></div>
-                            <div class="settings-item" data-speed="2">Скорость <span>2x</span></div>
-                        </div>
-                    </div>
+                    <iframe
+                        id="videoPlayer"
+                        src="https://player.abyssplayer.com/hYzBSHRhs"
+                        frameborder="0"
+                        scrolling="no"
+                        allowfullscreen
+                        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                    ></iframe>
                 </div>
 
+                <!-- ИНФО -->
                 <div class="info-block">
                     <img class="info-poster" id="infoPoster" src="images/DR.jpg" alt="Постер" onerror="this.src='images/Log.png'">
                     <div class="info-text">
-                        <div class="info-name" id="infoName">Название</div>
-                        <div class="info-detail"><strong>Год:</strong> <span id="infoYear">—</span></div>
-                        <div class="info-detail"><strong>Жанр:</strong> <span id="infoGenre">—</span></div>
-                        <div class="info-detail"><strong>Страна:</strong> <span id="infoCountry">—</span></div>
-                        <div class="info-detail"><strong>Режиссёр:</strong> <span id="infoDirector">—</span></div>
-                        <div class="info-detail"><strong>Перевод:</strong> <span id="infoTranslation">—</span></div>
-                        <div class="info-plot" id="infoPlot">Описание...</div>
+                        <div class="info-name" id="infoName">Хитрый койот</div>
+                        <div class="info-detail"><strong>Год:</strong> <span id="infoYear">2024</span></div>
+                        <div class="info-detail"><strong>Жанр:</strong> <span id="infoGenre">Мультфильм, комедия</span></div>
+                        <div class="info-detail"><strong>Страна:</strong> <span id="infoCountry">США</span></div>
+                        <div class="info-detail"><strong>Режиссёр:</strong> <span id="infoDirector">Чак Джонс</span></div>
+                        <div class="info-detail"><strong>Перевод:</strong> <span id="infoTranslation">Многоголосый</span></div>
+                        <div class="info-plot" id="infoPlot">
+                            Приключения хитроумного койота, который постоянно пытается поймать неуловимого бегуна-птицу. Классические мультфильмы Looney Tunes.
+                        </div>
                     </div>
                 </div>
 
@@ -698,28 +316,29 @@
     </div>
 
     <script>
-        // ===== БАЗА ДОРАМ =====
+        // ===== БАЗА =====
         const DRAMAS = {
-            drama1: {
-                name: 'Завтра снова на работу!',
-                episodes: 6,
+            cartoon1: {
+                name: 'Хитрый койот',
+                episodes: 1,
                 poster: 'images/DR.jpg',
                 year: '2024',
-                genre: 'Мелодрама, комедия',
-                country: 'Республика Корея',
-                director: 'Чо Ын-соль',
-                translation: 'Профессиональный многоголосый',
-                plot: 'Увлекательная история о жизни и любви. Кан Си У и Ча Джи Юн — двое совершенно разных людей, чьи судьбы переплетаются в вихре событий.',
-                video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                genre: 'Мультфильм, комедия',
+                country: 'США',
+                director: 'Чак Джонс',
+                translation: 'Многоголосый',
+                plot: 'Приключения хитроумного койота, который постоянно пытается поймать неуловимого бегуна-птицу. Классические мультфильмы Looney Tunes.',
+                iframeSrc: 'https://player.abyssplayer.com/hYzBSHRhs'
             }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
-        const dramaId = urlParams.get('drama') || 'drama1';
-        const drama = DRAMAS[dramaId] || DRAMAS.drama1;
+        const dramaId = urlParams.get('drama') || 'cartoon1';
+        const drama = DRAMAS[dramaId] || DRAMAS.cartoon1;
 
+        // ===== ЗАПОЛНЕНИЕ =====
         document.getElementById('watchTitle').textContent = drama.name;
-        document.getElementById('watchEpisodesCount').textContent = drama.episodes + ' серий';
+        document.getElementById('watchEpisodesCount').textContent = drama.episodes + ' серия';
         document.getElementById('infoName').textContent = drama.name;
         document.getElementById('infoYear').textContent = drama.year;
         document.getElementById('infoGenre').textContent = drama.genre;
@@ -728,16 +347,9 @@
         document.getElementById('infoTranslation').textContent = drama.translation;
         document.getElementById('infoPlot').textContent = drama.plot;
         document.getElementById('infoPoster').src = drama.poster;
-        document.getElementById('videoSource').src = drama.video;
-        document.getElementById('videoPlayer').load();
 
-        const episodeSelect = document.getElementById('episodeSelect');
-        episodeSelect.innerHTML = '';
-        for (let e = 1; e <= drama.episodes; e++) {
-            const opt = document.createElement('option');
-            opt.value = e;
-            opt.textContent = e + ' серия';
-            episodeSelect.appendChild(opt);
+        if (drama.iframeSrc) {
+            document.getElementById('videoPlayer').src = drama.iframeSrc;
         }
 
         // ===== МАСШТАБИРОВАНИЕ =====
@@ -765,218 +377,21 @@
         setTimeout(fitToScreen, 500);
         setTimeout(fitToScreen, 1500);
 
-        // ===== ПЛЕЕР =====
-        const video = document.getElementById('videoPlayer');
-        const playerContainer = document.getElementById('playerContainer');
-        const centerPlay = document.getElementById('centerPlay');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const rewindBtn = document.getElementById('rewindBtn');
-        const forwardBtn = document.getElementById('forwardBtn');
-        const muteBtn = document.getElementById('muteBtn');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const progressWrap = document.getElementById('progressWrap');
-        const progressFill = document.getElementById('progressFill');
-        const timeDisplay = document.getElementById('timeDisplay');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeFill = document.getElementById('volumeFill');
-        const settingsBtn = document.getElementById('settingsBtn');
-        const settingsMenu = document.getElementById('settingsMenu');
-        const qualityBtn = document.getElementById('qualityBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '00:00:00';
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = Math.floor(seconds % 60);
-            return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-        }
-
-        function togglePlay() {
-            if (video.paused) video.play();
-            else video.pause();
-        }
-
-        playPauseBtn.addEventListener('click', togglePlay);
-        centerPlay.addEventListener('click', togglePlay);
-        video.addEventListener('click', togglePlay);
-
-        const iconPlay = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-        const iconPause = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-
-        video.addEventListener('play', () => {
-            playPauseBtn.innerHTML = iconPause;
-            centerPlay.classList.add('hidden');
-            playerContainer.classList.remove('paused');
-        });
-
-        video.addEventListener('pause', () => {
-            playPauseBtn.innerHTML = iconPlay;
-            centerPlay.classList.remove('hidden');
-            playerContainer.classList.add('paused');
-        });
-
-        video.addEventListener('loadedmetadata', () => {
-            timeDisplay.textContent = formatTime(video.currentTime);
-        });
-
-        video.addEventListener('timeupdate', () => {
-            const percent = (video.currentTime / video.duration) * 100;
-            progressFill.style.width = percent + '%';
-            timeDisplay.textContent = formatTime(video.currentTime);
-        });
-
-        progressWrap.addEventListener('click', (e) => {
-            const rect = progressWrap.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            video.currentTime = percent * video.duration;
-        });
-
-        rewindBtn.addEventListener('click', () => {
-            video.currentTime = Math.max(0, video.currentTime - 10);
-        });
-        forwardBtn.addEventListener('click', () => {
-            video.currentTime = Math.min(video.duration, video.currentTime + 10);
-        });
-
-        const iconVolume = '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
-        const iconMute = '<svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
-
-        muteBtn.addEventListener('click', () => {
-            video.muted = !video.muted;
-            muteBtn.innerHTML = video.muted ? iconMute : iconVolume;
-        });
-
-        volumeSlider.addEventListener('click', (e) => {
-            const rect = volumeSlider.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            video.volume = Math.max(0, Math.min(1, percent));
-            volumeFill.style.width = (percent * 100) + '%';
-            video.muted = percent === 0;
-            muteBtn.innerHTML = video.muted ? iconMute : iconVolume;
-        });
-
-        // ===== ПОЛНЫЙ ЭКРАН + ПОВОРОТ В ГОРИЗОНТАЛЬНУЮ ОРИЕНТАЦИЮ =====
-        async function enterFullscreen() {
-            try {
-                // 1. Запрашиваем полный экран
-                if (playerContainer.requestFullscreen) {
-                    await playerContainer.requestFullscreen();
-                } else if (playerContainer.webkitRequestFullscreen) {
-                    await playerContainer.webkitRequestFullscreen();
-                } else if (playerContainer.msRequestFullscreen) {
-                    await playerContainer.msRequestFullscreen();
-                }
-
-                // 2. Пытаемся заблокировать ориентацию в landscape
-                // Работает на Android в Chrome, в Safari — может не работать
-                if (screen.orientation && screen.orientation.lock) {
-                    try {
-                        await screen.orientation.lock('landscape');
-                        console.log('✅ Ориентация заблокирована в landscape');
-                    } catch (err) {
-                        console.log('⚠️ Не удалось заблокировать landscape:', err.message);
-                        // Fallback — пытаемся заблокировать через любой доступный способ
-                        try {
-                            await screen.orientation.lock('landscape-primary');
-                        } catch (e) {
-                            console.log('⚠️ Fallback тоже не сработал');
-                        }
-                    }
-                }
-            } catch (err) {
-                console.error('Ошибка входа в полный экран:', err);
+        // ===== ТЕМА =====
+        const themeBtn = document.getElementById('themeBtn');
+        if (themeBtn) {
+            let theme = localStorage.getItem('theme') || 'dark';
+            function applyTheme(t) {
+                document.documentElement.setAttribute('data-theme', t);
+                localStorage.setItem('theme', t);
+                theme = t;
+                themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
             }
-        }
-
-        async function exitFullscreen() {
-            try {
-                // 1. Разблокируем ориентацию
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
-
-                // 2. Выходим из полного экрана
-                if (document.exitFullscreen) {
-                    await document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    await document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.error('Ошибка выхода из полного экрана:', err);
-            }
-        }
-
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                enterFullscreen();
-            } else {
-                exitFullscreen();
-            }
-        });
-
-        // Следим за изменением состояния полного экрана
-        // (если пользователь вышел кнопкой "назад" на Android)
-        function onFullscreenChange() {
-            const isFullscreen = document.fullscreenElement ||
-                                 document.webkitFullscreenElement ||
-                                 document.msFullscreenElement;
-
-            if (!isFullscreen) {
-                // Разблокируем ориентацию, если вышли не через кнопку
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
-            }
-        }
-
-        document.addEventListener('fullscreenchange', onFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
-        document.addEventListener('msfullscreenchange', onFullscreenChange);
-
-        // Настройки
-        settingsBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            settingsMenu.classList.toggle('show');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!settingsMenu.contains(e.target) && e.target !== settingsBtn) {
-                settingsMenu.classList.remove('show');
-            }
-        });
-
-        settingsMenu.querySelectorAll('.settings-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const speed = parseFloat(item.dataset.speed);
-                video.playbackRate = speed;
-                settingsMenu.querySelectorAll('.settings-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
+            themeBtn.addEventListener('click', () => {
+                applyTheme(theme === 'dark' ? 'light' : 'dark');
             });
-        });
-
-        qualityBtn.addEventListener('click', () => {
-            const qualities = ['360p', '480p', '720p', '1080p'];
-            const current = qualityBtn.textContent;
-            const idx = qualities.indexOf(current);
-            const next = qualities[(idx + 1) % qualities.length];
-            qualityBtn.textContent = next;
-        });
-
-        downloadBtn.addEventListener('click', () => {
-            const a = document.createElement('a');
-            a.href = video.currentSrc || video.src;
-            a.download = drama.name + ' - серия ' + episodeSelect.value + '.mp4';
-            a.click();
-        });
-
-        episodeSelect.addEventListener('change', () => {
-            video.currentTime = 0;
-        });
-
-        playerContainer.classList.add('paused');
+            applyTheme(theme);
+        }
     </script>
 </body>
 </html>
