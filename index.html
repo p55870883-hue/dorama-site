@@ -175,7 +175,7 @@
             flex-direction: column;
         }
 
-        /* ===== ИЗБРАННОЕ ===== */
+        /* ===== ИЗБРАННОЕ — НАД ПОИСКОМ ===== */
         .favorites-bar {
             margin-bottom: 16px;
             flex-shrink: 0;
@@ -345,7 +345,7 @@
             background: #ff0000;
         }
 
-        /* ===== СЕТКА — КАРТОЧКИ СТАЛИ ШИРЕ ===== */
+        /* ===== СЕТКА ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -353,7 +353,7 @@
             align-content: start;
         }
 
-        /* ===== КАРТОЧКА — ДЛИННЕЕ И КРУПНЕЕ ===== */
+        /* ===== КАРТОЧКА ===== */
         .card {
             background: var(--bg-card);
             border: 3px solid var(--cat-border);
@@ -373,11 +373,10 @@
             box-shadow: 0 0 35px var(--cat-glow);
         }
 
-        /* Постер — выше, чем было (не 2:3, а 3:4 для более вертикальной формы) */
         .card-poster-wrap {
             position: relative;
             width: 100%;
-            aspect-ratio: 3 / 4;               /* ← было 2/3, стало 3/4 — постер выше */
+            aspect-ratio: 3 / 4;
             overflow: hidden;
             background: #1a212b;
         }
@@ -389,7 +388,6 @@
             display: block;
         }
 
-        /* Рейтинг — крупнее */
         .card-rating {
             position: absolute;
             top: 12px;
@@ -414,7 +412,6 @@
             font-size: 18px;
         }
 
-        /* Сердечко — крупнее */
         .card-fav {
             position: absolute;
             top: 12px;
@@ -449,7 +446,6 @@
             box-shadow: 0 0 25px var(--cat-glow);
         }
 
-        /* Название — крупнее */
         .card-title {
             padding: 18px 18px 12px;
             text-align: center;
@@ -473,7 +469,6 @@
                 0 0 10px var(--cat-glow-blue);
         }
 
-        /* Кнопка — крупнее */
         .card-watch-btn {
             display: block;
             margin: 10px 18px 18px;
@@ -756,12 +751,12 @@
         // ===== БАЗА ФИЛЬМОВ =====
         const MOVIES = [
             {
-                id: 'drama1',
-                title: 'Завтра снова на работу!',
+                id: 'cartoon1',
+                title: 'Хитрый койот',
                 poster: 'images/DR.jpg',
-                rating: 8.5,
-                categories: ['dorama', 'series', 'series-2026', 'best-series'],
-                episodes: 6
+                rating: 9.0,
+                categories: ['cartoon', 'comedy', 'best-films'],
+                episodes: 1
             }
         ];
 
